@@ -22,9 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="CPqDWebSocketStandard">
-      <HintPath>..\CPqDWebSocketStandard\CPqDWebSocketStandard\bin\Release\netstandard2.0\CPqDWebSocketStandard.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\CPqDWebSocketStandard\CPqDWebSocketStandard\CPqDWebSocketStandard.csproj" />
   </ItemGroup>
 
 </Project>
