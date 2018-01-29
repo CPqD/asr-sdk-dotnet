@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ASRClientFactory.cs" />
+    <Compile Remove="ASR\AudioEncoding.cs" />
+    <Compile Remove="ASR\FileASRClient.cs" />
+    <Compile Remove="ASR\StreamASRClient.cs" />
+    <Compile Remove="CPqDTraceListener.cs" />
+    <Compile Remove="Entities\Alternative.cs" />
+    <Compile Remove="Entities\Parameters.cs" />
+    <Compile Remove="Entities\ResultASR.cs" />
+    <Compile Remove="Events\CPqDAsrRecognitionResultEventArgs.cs" />
+    <Compile Remove="MicASRClient.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CPqDWebSocketStandard">
+      <HintPath>..\CPqDWebSocketStandard\CPqDWebSocketStandard\bin\Release\netstandard2.0\CPqDWebSocketStandard.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="AsrClientCmd.cs" />
+    <Compile Remove="SincronoASR.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CPqDAsr\CPqDAsr.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CPqDWebSocketStandard">
+      <HintPath>..\CPqDWebSocketStandard\CPqDWebSocketStandard\bin\Release\netstandard2.0\CPqDWebSocketStandard.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
