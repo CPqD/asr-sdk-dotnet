@@ -226,7 +226,7 @@ namespace CPqDASR.ASR
                 tm.Elapsed += Tm_Elapsed;
                 tm.Start();
 
-                //Aguarda o termino do recinhecimento
+                //Aguarda o termino do reconhecimento
                 wtResult.WaitOne();
                 tm.Close();
 

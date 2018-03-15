@@ -26,20 +26,21 @@ namespace CPqDASRUnitTest.ASR
 
         #region Methods for tests
         #region Tests of Builder
-
+        /// <summary>
+        /// Testa se o "SpeechRecognizer.Builder" dispara exception quando a URL de conexão com servidor ASR é nula
+        /// </summary>
         [TestMethod]
         public void UrlNull()
         {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault(), null);
-            var audioSource = new FileAudioSource(@"8k\pizza\pizza_veg_audio_8k.wav");
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault(), null);
+            var lModelLst = new LanguageModelList();
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            List<RecognitionResult> results = null;
 
             try
-            {
-                //Cria modelo de linguagem com gramática para o áudio de pizza:
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("http://vmh102.cpqd.com.br:8280/asr_dist/repository/grammars/dynamic-gram/pizza.gram");
-
-                var results = this.ExecuteRecognition(clientConfig, lModelLst, audioSource);
+            {           
+                lModelLst.AddFromUri(TestsReferences.GramPizzaHttp);
+                results = ExecuteRecognition(clientConfig, lModelLst, audioSource);
             }
             catch (Exception ex)
             {
@@ -50,19 +51,21 @@ namespace CPqDASRUnitTest.ASR
             throw new AssertFailedException("A null server Url doesn't throw an ArgumentNullException!");
         }
 
+        /// <summary>
+        /// Testa se o "SpeechRecognizer.Builder" dispara exception quando a URL de conexão com servidor ASR é inválida
+        /// </summary>
         [TestMethod]
         public void UrlInvalid()
         {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault(), "ws:invalid_uri");
-            var audioSource = new FileAudioSource(@"8k\pizza\pizza_veg_audio_8k.wav");
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault(), "ws:invalid_uri");
+            var lModelLst = new LanguageModelList();
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            List<RecognitionResult> results = null;
 
             try
             {
-                //Cria modelo de linguagem com gramática para o áudio de pizza:
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("http://vmh102.cpqd.com.br:8280/asr_dist/repository/grammars/dynamic-gram/pizza.gram");
-
-                var results = this.ExecuteRecognition(clientConfig, lModelLst, audioSource);
+                lModelLst.AddFromUri(TestsReferences.GramPizzaHttp);
+                results = ExecuteRecognition(clientConfig, lModelLst, audioSource);
             }
             catch (Exception ex)
             {
@@ -73,41 +76,45 @@ namespace CPqDASRUnitTest.ASR
             throw new AssertFailedException("A invalid server Url doesn't throw an UriFormatException!");
         }
 
+        /// <summary>
+        /// Testa se o "SpeechRecognizer.Builder" de fato aceita uma credencial de acesso válida
+        /// </summary>
         [TestMethod]
         public void CredentialValid()
         {
-            var clientConfig = this.CreateClientWithCredentials(this.CreateConfigDefault(), "wss://speech.cpqd.com.br/asr/ws/estevan/recognize/8k", "estevan", "Thect195");
-            var audioSource = new FileAudioSource(@"8k\pizza\pizza_veg_audio_8k.wav");
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, "estevan", "Thect195");
+            var lModelLst = new LanguageModelList();
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            List<RecognitionResult> results = null;
 
             try
             {
-                //Cria modelo de linguagem com gramática para o áudio de pizza:
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("http://vmh102.cpqd.com.br:8280/asr_dist/repository/grammars/dynamic-gram/pizza.gram");
-
-                var results = this.ExecuteRecognition(clientConfig, lModelLst, audioSource);
-
-                Assert.IsTrue(results?.Count > 0);
+                lModelLst.AddFromUri(TestsReferences.GramPizzaHttp);
+                results = ExecuteRecognition(clientConfig, lModelLst, audioSource);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new InternalTestFailureException(ex.Message);
             }
+
+            Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
+        /// <summary>
+        /// Testa se o "SpeechRecognizer.Builder" dispara exception quando a credencial de acesso é inválida
+        /// </summary>
         [TestMethod]
         public void CredentialInvalid()
         {
-            var clientConfig = this.CreateClientWithCredentials(this.CreateConfigDefault(), "wss://speech.cpqd.com.br/asr/ws/estevan/recognize/8k", "invalid", "invalid");
-            var audioSource = new FileAudioSource(@"8k\pizza\pizza_veg_audio_8k.wav");
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, "invalid", "invalid");
+            var lModelLst = new LanguageModelList();
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
 
             try
             {
-                //Cria modelo de linguagem com gramática para o áudio de pizza:
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("http://vmh102.cpqd.com.br:8280/asr_dist/repository/grammars/dynamic-gram/pizza.gram");
-
-                this.ExecuteRecognition(clientConfig, lModelLst, audioSource);
+                lModelLst.AddFromUri(TestsReferences.GramPizzaHttp);
+                ExecuteRecognition(clientConfig, lModelLst, audioSource);
             }
             catch (Exception ex)
             {
@@ -118,19 +125,20 @@ namespace CPqDASRUnitTest.ASR
             throw new AssertFailedException();
         }
 
+        /// <summary>
+        /// Testa se o "SpeechRecognizer.Builder" dispara exception quando a credencial de acesso é nula
+        /// </summary>
         [TestMethod]
         public void CredentialNull()
         {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault(), "wss://speech.cpqd.com.br/asr/ws/estevan/recognize/8k");
-            var audioSource = new FileAudioSource(@"8k\pizza\pizza_veg_audio_8k.wav");
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, null, null);
+            var lModelLst = new LanguageModelList();
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
 
             try
             {
-                //Cria modelo de linguagem com gramática para o áudio de pizza:
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("http://vmh102.cpqd.com.br:8280/asr_dist/repository/grammars/dynamic-gram/pizza.gram");
-
-                this.ExecuteRecognition(clientConfig, lModelLst, audioSource);
+                lModelLst.AddFromUri(TestsReferences.GramPizzaHttp);
+                ExecuteRecognition(clientConfig, lModelLst, audioSource);
             }
             catch (Exception ex)
             {
@@ -141,20 +149,63 @@ namespace CPqDASRUnitTest.ASR
             throw new AssertFailedException();
         }
 
+        /// <summary>
+        /// Testa se o "SpeechRecognizer.Builder" repassa a configuração de parâmetros solicitada
+        /// </summary>
         [TestMethod]
-        public async Task MultipleListeners()
+        public void RecogConfig()
         {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault());
-            var audioSource = new FileAudioSource(@"8k\pizza\pizza_veg_audio_8k.wav");
-            Events = new EventsPassed();
-            SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig);
+            var recogConfig = new RecognitionConfig
+            {
+                ConfidenceThreshold = 100,
+                ContinuousMode = false,
+                EndpointerAutoLevelLen = 350,
+                EndpointerLevelMode = 0,
+                EndpointerLevelThreshold = 4,
+                HeadMarginMilliseconds = 250,
+                MaxSentences = 3,
+                NoInputTimeoutEnabled = false,
+                NoInputTimeoutMilliseconds = 2000,
+                RecognitionTimeoutEnabled = false,
+                RecognitionTimeoutMilliseconds = 5000,
+                StartInputTimers = false,
+                TailMarginMilliseconds = 450,
+                WaitEndMilliseconds = 900
+            };
+
+            var clientConfig = CreateClientConfigDefault(recogConfig);
+            var lModelLst = new LanguageModelList();
+            var audioSource = new FileAudioSource(TestsReferences.AudioCpf);
+            List<RecognitionResult> results = null;
 
             try
             {
-                //Cria modelo de linguagem com gramática para o áudio de pizza:
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("http://vmh102.cpqd.com.br:8280/asr_dist/repository/grammars/dynamic-gram/pizza.gram");
-                
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+                results = ExecuteRecognition(clientConfig, lModelLst, audioSource);
+            }
+            catch (Exception ex)
+            {
+                throw new InternalTestFailureException(ex.Message);
+            }
+
+            Assert.AreEqual(CPqDASR.RecognitionResultCode.NO_MATCH, results[0].ResultCode);
+        }
+
+        /// <summary>
+        /// Testa se o "SpeechRecognizer.Builder" está repassando os eventos para todos os listeners
+        /// </summary>
+        [TestMethod]
+        public async Task MultipleListeners()
+        {
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var lModelLst = new LanguageModelList();
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+
+            using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
+            {
+                lModelLst.AddFromUri(TestsReferences.GramPizzaHttp);
+
+                Events = new EventsPassed();
                 speechRecognizer.OnListening += SpeechRecognizer_OnListening;
                 speechRecognizer.OnPartialRecognitionResult += SpeechRecognizer_OnPartialRecognitionResult;
                 speechRecognizer.OnRecognitionResult += SpeechRecognizer_OnRecognitionResult;
@@ -163,47 +214,38 @@ namespace CPqDASRUnitTest.ASR
 
                 speechRecognizer.Recognize(audioSource, lModelLst);
 
-                Task<bool> checkEventsPassed = this.CheckIfEventsHasPassed();
+                Task<bool> checkEventsPassed = CheckIfEventsHasPassed();
 
                 bool result = await checkEventsPassed;
 
                 Assert.IsTrue(result);
             }
-            catch (Exception ex)
-            {
-                Events = null;
-                throw ex;
-            }
-            finally
-            {
-                speechRecognizer.Close();
-            }
-
             Events = null;
         }
 
+        /// <summary>
+        /// Testa se o "SpeechRecognizer.Builder" respeita o valor de timeout de espera de resposta definido
+        /// </summary>
         [TestMethod]
         public void MaxWaitSettings()
         {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault());
-            var audioSource = new FileAudioSource(@"8k\pizza\pizza_veg_audio_8k.wav");
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var lModelLst = new LanguageModelList();
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
 
-            //Just initializinf variables with same value
+            //Just initializing variables with same value
             DateTime initWait = DateTime.Now;
             DateTime endWait = new DateTime(initWait.Ticks);
 
-            double stampInSeconds;
-
+            double stampInMilliseconds;
             const int timeToWait = 1000;
+
             SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig);
             try
             {
-                //Cria modelo de linguagem com gramática para o áudio de pizza:
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("http://vmh102.cpqd.com.br:8280/asr_dist/repository/grammars/dynamic-gram/pizza.gram");
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
 
                 speechRecognizer.Recognize(audioSource, lModelLst);
-
                 initWait = DateTime.Now;
                 speechRecognizer.WaitRecognitionResult(timeToWait);
             }
@@ -223,168 +265,183 @@ namespace CPqDASRUnitTest.ASR
                 speechRecognizer.Close();
             }
 
-            stampInSeconds = (endWait - initWait).TotalSeconds;
+            stampInMilliseconds = (endWait - initWait).TotalMilliseconds;
 
             //Asserts if stamp was correctly calculated and is lower than timeToWait 
             //with an increment of 200 milis that considering the natural processing delay
-            Assert.IsTrue(stampInSeconds > 0 && stampInSeconds <= (timeToWait + 200));
+            Assert.IsTrue(stampInMilliseconds > 0 && stampInMilliseconds <= (timeToWait + 200));
         }
         #endregion
 
         #region Methods of SpeechRecognition
         /// <summary>
-        /// 
+        /// Checa se um reconhecimento básico com gramática retorna texto, interpretação e score adequados
         /// </summary>
         [TestMethod]
         public void BasicGrammar()
         {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault());
-            var audioSource = new FileAudioSource(@"8k\pizza\pizza_veg_audio_8k.wav");
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var lModelLst = new LanguageModelList();
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            List<RecognitionResult> results = null;
 
             try
             {
-                //Cria modelo de linguagem com gramática para o áudio de pizza:
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("http://vmh102.cpqd.com.br:8280/asr_dist/repository/grammars/dynamic-gram/pizza.gram");
-
-                var results = this.ExecuteRecognition(clientConfig, lModelLst, audioSource);
-
-                var score = results.
-                    Where(r => r.ResultCode == CPqDASR.RecognitionResultCode.RECOGNIZED).
-                    FirstOrDefault().Alternatives.
-                    Where(a => a.Confidence >= 90).FirstOrDefault()?.Confidence;
-
-                Assert.AreEqual(score != null && score > 90, true);
-
+                lModelLst.AddFromUri(TestsReferences.GramPizzaHttp);
+                results = ExecuteRecognition(clientConfig, lModelLst, audioSource);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new InternalTestFailureException(ex.Message);
             }
+
+            var score = results?.
+                Where(r => r.ResultCode == CPqDASR.RecognitionResultCode.RECOGNIZED).
+                FirstOrDefault().Alternatives.
+                Where(a => a.Confidence >= 90).FirstOrDefault()?.Confidence;
+            Assert.IsNotNull(score);
+
+            var textFromFirstAlternative = results[0].Alternatives[0].Text.ToString();
+            Assert.AreEqual(TestsReferences.TextPizzaVeg, textFromFirstAlternative);
+            var firstInterpFromFirstAlt = results[0].Alternatives[0].Interpretations[0].InterpretationJson.ToString();
+            Assert.AreEqual(TestsReferences.InterpPizzaVeg, firstInterpFromFirstAlt);
         }
 
+        /// <summary>
+        /// Checa se um reconhecimento básico com Modelo de Fala Livre retorna texto, interpretação e score adequados
+        /// </summary>
         [TestMethod]
         public void BasicSLM()
         {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault());
-            var audioSource = new FileAudioSource(@"8k\pizza\pizza_veg_audio_8k.wav");
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var lModelLst = new LanguageModelList();
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            List<RecognitionResult> results = null;
 
             try
             {
-                //Cria modelo de linguagem com gramática para o áudio de pizza:
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("builtin:slm/general");
-
-                var results = this.ExecuteRecognition(clientConfig, lModelLst, audioSource);
-
-                var score = results.
-                    Where(r => r.ResultCode == CPqDASR.RecognitionResultCode.RECOGNIZED).
-                    FirstOrDefault().Alternatives.
-                    Where(a => a.Confidence >= 90).FirstOrDefault()?.Confidence;
-
-                Assert.AreEqual(score != null && score > 90, true);
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+                results = ExecuteRecognition(clientConfig, lModelLst, audioSource);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new InternalTestFailureException(ex.Message);
             }
+
+            var score = results?.
+                Where(r => r.ResultCode == CPqDASR.RecognitionResultCode.RECOGNIZED).
+                FirstOrDefault().Alternatives.
+                Where(a => a.Confidence >= 90).FirstOrDefault()?.Confidence;
+            Assert.IsNotNull(score);
+
+            var textFromFirstAlternative = results[0].Alternatives[0].Text.ToString();
+            Assert.AreEqual(TestsReferences.TextPizzaVeg, textFromFirstAlternative);
         }
 
+        /// <summary>
+        /// Checar se o estado NO_SPEECH é retornado quando não há detecção de fala e a flag que indica último pacote é verdadeira
+        /// </summary>
         [TestMethod]
         public void NoSpeech()
         {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault());
-            var audioSource = new FileAudioSource(@"8k\Silencio\silence-8k.wav");
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var lModelLst = new LanguageModelList();
+            var audioSource = new FileAudioSource(TestsReferences.AudioSilence);
+            List<RecognitionResult> results = null;
 
             try
             {
-                //Cria modelo de linguagem com gramática para o áudio de pizza:
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("builtin:slm/general");
-
-                var results = ExecuteRecognition(clientConfig, lModelLst, audioSource);
-
-                Assert.IsTrue(results != null && results.Count > 0);
-                Assert.AreEqual(results[0].ResultCode, CPqDASR.RecognitionResultCode.NO_SPEECH);
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+                results = ExecuteRecognition(clientConfig, lModelLst, audioSource);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new InternalTestFailureException(ex.Message);
             }
+
+            Assert.IsTrue(results != null && results.Count > 0);
+            Assert.AreEqual(CPqDASR.RecognitionResultCode.NO_SPEECH, results[0].ResultCode);
         }
 
+        /// <summary>
+        /// Checar se o estado NO_INPUT_TIMEOUT é retornado quando não ocorre START_OF_SPEECH antes do timer estourar
+        /// </summary>
         [TestMethod]
         public void NoInputTimeOut()
         {
-            var recogConfig = this.CreateConfigDefault();
+            var recogConfig = new RecognitionConfig
+            {
+                NoInputTimeoutMilliseconds = 2000,
+                NoInputTimeoutEnabled = true
+            };
 
-            recogConfig.NoInputTimeoutMilliseconds = 50;
-            recogConfig.NoInputTimeoutEnabled = true;
+            var clientConfig = CreateClientConfigDefault(recogConfig);
+            var lModelLst = new LanguageModelList();
+            // O método "BufferAudioSource" envia áudio simulando tempo real
+            // Aqui o arquivo de silêncio deve ser maior que o NoInputTimeoutMilliseconds
+            var audioSource = new BufferAudioSource(File.ReadAllBytes(TestsReferences.AudioSilence));
+            List<RecognitionResult> results = null;
 
-            var clientConfig = this.CreateClientConfigDefault(recogConfig);
-            var audioSource = new FileAudioSource(@"8k\Silencio\silence-8k.wav");
             try
             {
-                //Cria modelo de linguagem com gramática para o áudio de pizza:
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("builtin:slm/general");
-
-                var results = ExecuteRecognition(clientConfig, lModelLst, audioSource);
-
-                var reultNoInputTimeout = results.
-                    Where(r => r.ResultCode == CPqDASR.RecognitionResultCode.NO_INPUT_TIMEOUT).
-                    FirstOrDefault();
-                Assert.IsNotNull(reultNoInputTimeout);
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+                results = ExecuteRecognition(clientConfig, lModelLst, audioSource);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new InternalTestFailureException(ex.Message);
             }
+
+            Assert.IsTrue(results != null && results.Count > 0);
+            Assert.AreEqual(CPqDASR.RecognitionResultCode.NO_INPUT_TIMEOUT, results[0].ResultCode);
         }
 
+        /// <summary>
+        /// Checa se o reconhecimento ocorre normalmente com áudio enviado simulando streaming
+        /// </summary>
         [TestMethod]
         public void RecognizeBufferAudioSource()
         {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault());
-            //Send all buffer to be writter
-            var audioSource = new BufferAudioSource(File.ReadAllBytes(@"8k\pizza\pizza_veg_audio_8k.wav"));
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var lModelLst = new LanguageModelList();
+            var audioSource = new BufferAudioSource(File.ReadAllBytes(TestsReferences.AudioPizzaVeg));
+            List<RecognitionResult> results = null;
 
             try
             {
-                //Cria modelo de linguagem com gramática para o áudio de pizza:
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("builtin:slm/general");
-
-                var results = ExecuteRecognition(clientConfig, lModelLst, audioSource);
-
-                var reultNoInputTimeout = results.
-                    Where(r => r.ResultCode == CPqDASR.RecognitionResultCode.RECOGNIZED).
-                    FirstOrDefault();
-                Assert.IsNotNull(reultNoInputTimeout);
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+                results = ExecuteRecognition(clientConfig, lModelLst, audioSource);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new InternalTestFailureException(ex.Message);
             }
+
+            var score = results?.
+                Where(r => r.ResultCode == CPqDASR.RecognitionResultCode.RECOGNIZED).
+                FirstOrDefault().Alternatives.
+                Where(a => a.Confidence >= 90).FirstOrDefault()?.Confidence;
+            Assert.IsNotNull(score);
+
+            var textFromFirstAlternative = results[0].Alternatives[0].Text.ToString();
+            Assert.AreEqual(TestsReferences.TextPizzaVeg, textFromFirstAlternative);
         }
 
+        /// <summary>
+        /// Checa se o timer de timeout na thread de resposta é respeitado
+        /// </summary>
         [TestMethod]
         public void RecognizeMaxWaitSeconds()
         {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault());
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var lModelLst = new LanguageModelList();
+            var audioSource = new FileAudioSource(TestsReferences.AudioCpf);
 
             //Set 2 seconds to max wait time
             clientConfig.MaxWaitSeconds = 2000;
-
-            //Send all buffer to be writter
-            var audioSource = new BufferAudioSource(File.ReadAllBytes(@"8k\ContinuosMode\joao_mineiro_marciano_intro_8k.wav"));
-
             try
             {
-                //Cria modelo de linguagem com gramática para o áudio de pizza:
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("builtin:slm/general");
-
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
                 ExecuteRecognition(clientConfig, lModelLst, audioSource);
             }
             catch (Exception ex)
@@ -393,188 +450,152 @@ namespace CPqDASRUnitTest.ASR
             }
         }
 
+        /// <summary>
+        /// Checa se a execução do Close() durante o reconhecimento retorna resultado vazio
+        /// </summary>
         [TestMethod]
         public void CloseWhileRecognize()
         {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault());
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var lModelLst = new LanguageModelList();
+            var audioSource = new BufferAudioSource(File.ReadAllBytes(TestsReferences.AudioCpf));
+            List<RecognitionResult> results = null;
 
-            //Send all buffer to be writter
-            var audioSource = new BufferAudioSource(File.ReadAllBytes(@"8k\ContinuosMode\joao_mineiro_marciano_intro_8k.wav"));
-
-            SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig);
-            try
+            using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
             {
-
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("builtin:slm/general");
-
-                speechRecognizer.Recognize(audioSource, lModelLst);
-
-                Thread.Sleep(2000);
-
-                speechRecognizer.Close();
-                var result = speechRecognizer.WaitRecognitionResult();
-
-                Assert.IsTrue(result.Count == 0);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                speechRecognizer.Close();
-            }
-        }
-
-        [TestMethod]
-        public void CloseWithoutRecognize()
-        {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault());
-            //Send all buffer to be writter
-            var audioSource = new BufferAudioSource(File.ReadAllBytes(@"8k\pizza\pizza_veg_audio_8k.wav"));
-
-            try
-            {
-                SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig);
-                speechRecognizer.Close();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        [TestMethod]
-        public void CancelWhileRecognize()
-        {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault());
-            //Send all buffer to be writter
-            var audioSource = new BufferAudioSource(File.ReadAllBytes(@"8k\ContinuosMode\joao_mineiro_marciano_intro_8k.wav"));
-
-            SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig);
-
-            try
-            {
-
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("builtin:slm/general");
-
-                speechRecognizer.Recognize(audioSource, lModelLst);
-
-                Thread.Sleep(2000);
-
-                speechRecognizer.CancelRecognition();
-
-                var result = speechRecognizer.WaitRecognitionResult();
-                Assert.IsTrue(result.Count == 0);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                speechRecognizer.Close();
-            }
-        }
-
-        [TestMethod]
-        public void CancelNoRecognize()
-        {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault());
-
-            SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig);
-
-            try
-            {
-                speechRecognizer.CancelRecognition();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                speechRecognizer.Close();
-            }
-        }
-
-        [TestMethod]
-        public void WaitNoRecognize()
-        {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault());
-
-            SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig);
-
-            try
-            {
-                var result = speechRecognizer.WaitRecognitionResult();
-                Assert.IsTrue(result.Count == 0);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                speechRecognizer.Close();
-            }
-        }
-
-        [TestMethod]
-        public void WaitRecognitionResultDuplicate()
-        {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault());
-            //Send all buffer to be writter
-            var audioSource = new BufferAudioSource(File.ReadAllBytes(@"8k\pizza\pizza_veg_audio_8k.wav"));
-
-            SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig);
-
-            try
-            {
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("builtin:slm/general");
-
-                speechRecognizer.Recognize(audioSource, lModelLst);
-
-                var result = speechRecognizer.WaitRecognitionResult();
-                var resultRecognized = result.Where(r => r.ResultCode == CPqDASR.RecognitionResultCode.RECOGNIZED).FirstOrDefault();
-
-                Assert.IsNotNull(resultRecognized);
-
-                var duplicatedResult = speechRecognizer.WaitRecognitionResult();
-
-                Assert.IsTrue(duplicatedResult.Count == 0);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                speechRecognizer.Close();
-            }
-        }
-
-        [TestMethod]
-        public void DuplicateRecognize()
-        {
-            var clientConfig = this.CreateClientConfigDefault(this.CreateConfigDefault());
-            //Send all buffer to be writter
-            var audioSource = new BufferAudioSource(File.ReadAllBytes(@"8k\pizza\pizza_veg_audio_8k.wav"));
-
-            SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig);
-
-            try
-            {
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("builtin:slm/general");
-
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
                 speechRecognizer.Recognize(audioSource, lModelLst);
 
                 Thread.Sleep(1000);
 
+                speechRecognizer.Close();
+                results = speechRecognizer.WaitRecognitionResult();
+            }
+
+            Assert.AreEqual(0, results.Count);
+        }
+
+        /// <summary>
+        /// Checa se a execução do Close() sem reconhecimento não gera erros
+        /// </summary>
+        [TestMethod]
+        public void CloseWithoutRecognize()
+        {
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+
+            using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
+            {
+                speechRecognizer.Close();
+            }
+        }
+
+        /// <summary>
+        /// Checa se a execução do CancelRecognition() durante o reconhecimento retorna resultado vazio
+        /// </summary>
+        [TestMethod]
+        public void CancelWhileRecognize()
+        {
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var lModelLst = new LanguageModelList();
+            var audioSource = new BufferAudioSource(File.ReadAllBytes(TestsReferences.AudioCpf));
+            List<RecognitionResult> results = null;
+
+            using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
+            {
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+                speechRecognizer.Recognize(audioSource, lModelLst);
+
+                Thread.Sleep(1000);
+
+                speechRecognizer.CancelRecognition();
+                results = speechRecognizer.WaitRecognitionResult();
+            }
+
+            Assert.AreEqual(0, results.Count);
+        }
+
+        /// <summary>
+        /// Checa se a execução do CancelRecognition() sem reconhecimento não gera erros
+        /// </summary>
+        [TestMethod]
+        public void CancelNoRecognize()
+        {
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+
+            using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
+            {
+                speechRecognizer.CancelRecognition();
+            }
+        }
+
+        /// <summary>
+        /// Checa se a execução do método WaitRecognitionResult() sem reconhecimento não retorna erros
+        /// </summary>
+        [TestMethod]
+        public void WaitNoRecognize()
+        {
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            List<RecognitionResult> results = null;
+
+            using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
+            {
+                results = speechRecognizer.WaitRecognitionResult();
+            }
+
+            Assert.AreEqual(0, results.Count);
+        }
+
+        /// <summary>
+        /// Checa se uma segunda chamada do WaitRecognitionResult() retorna resultado vazio e sem atraso
+        /// </summary>
+        [TestMethod]
+        public void WaitRecognitionResultDuplicate()
+        {
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var lModelLst = new LanguageModelList();
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+
+            //Just initializing variables with same value
+            DateTime initWait = DateTime.Now;
+            DateTime endWait = new DateTime(initWait.Ticks);
+            double stampInMilliseconds;
+
+            using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
+            {
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+                speechRecognizer.Recognize(audioSource, lModelLst);
+
+                var firstResult = speechRecognizer.WaitRecognitionResult();
+                Assert.AreEqual(CPqDASR.RecognitionResultCode.RECOGNIZED, firstResult[0].ResultCode);
+
+                initWait = DateTime.Now;
+                var duplicatedResult = speechRecognizer.WaitRecognitionResult();
+                endWait = DateTime.Now;
+
+                stampInMilliseconds = (endWait - initWait).TotalMilliseconds;
+
+                Assert.AreEqual(0, duplicatedResult.Count);
+                Assert.IsTrue(0 < stampInMilliseconds && stampInMilliseconds < 5);
+            }
+        }
+
+        /// <summary>
+        /// Checa se a chamada de um segundo Recognize() gera exceção, mas não afeta o resultado do primeiro
+        /// </summary>
+        [TestMethod]
+        public void DuplicateRecognize()
+        {
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            var lModelLst = new LanguageModelList();
+            List<RecognitionResult> results = null;
+
+            using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
+            {
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+                speechRecognizer.Recognize(audioSource, lModelLst);
+
+                Thread.Sleep(500);
                 try
                 {
                     speechRecognizer.Recognize(audioSource, lModelLst);
@@ -583,68 +604,156 @@ namespace CPqDASRUnitTest.ASR
                 {
                     Assert.IsInstanceOfType(ex, typeof(RecognitionException));
                 }
+                results = speechRecognizer.WaitRecognitionResult();
+            }
 
-                var result = speechRecognizer.WaitRecognitionResult();
-                var resultRecognized = result.Where(r => r.ResultCode == CPqDASR.RecognitionResultCode.RECOGNIZED).FirstOrDefault();
+            Assert.AreEqual(CPqDASR.RecognitionResultCode.RECOGNIZED, results[0].ResultCode);
 
-                Assert.IsNotNull(resultRecognized);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                speechRecognizer.Close();
-            }
         }
 
+        /// <summary>
+        /// Checa estabilidade com múltiplos reconhecimentos mantendo conexões abertas desde o início ao fim da interação com o servidor
+        /// </summary>
         [TestMethod]
         public void MultipleRecognize()
         {
-            ExecuteMultiplesRecognitions(CreateClientConfigDefault(CreateConfigDefault()));
+            var config = CreateClientConfigDefault(CreateConfigDefault());
+
+            config.ConnectOnRecognize = false; // Valor padrão
+            config.AutoClose = false; // Valor padrão
+
+            ExecuteMultiplesRecognitions(config, 4);
         }
 
+        /// <summary>
+        /// Checa estabilidade com múltiplos reconhecimentos mantendo conexões abertas desde o início do reconhecimento
+        /// ao fim da interação com o servidor
+        /// </summary>
         [TestMethod]
         public void MultiplesConnectOnRecognize()
         {
             var config = CreateClientConfigDefault(CreateConfigDefault());
 
-            config.AutoClose = true;
+            config.ConnectOnRecognize = true;
+            config.AutoClose = false;
 
-            ExecuteMultiplesRecognitions(config);
+            ExecuteMultiplesRecognitions(config, 4);
         }
 
+        /// <summary>
+        /// Checa estabilidade com múltiplos reconhecimentos mantendo conexões abertas desde o início da interação com o servidor
+        /// e fechando ao término do reconhecimento
+        /// </summary>
+        [TestMethod]
+        public void MultiplesAutoClose()
+        {
+            var config = CreateClientConfigDefault(CreateConfigDefault());
+
+            config.ConnectOnRecognize = false;
+            config.AutoClose = true;
+
+            ExecuteMultiplesRecognitions(config, 4);
+        }
+
+        /// <summary>
+        /// Checa se o resultado é recuperado normalmente após ocorrer timeout de sessão por falta de uso
+        /// </summary>
         [TestMethod]
         public void SessionTimeout()
         {
             var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
-            //Send all buffer to be writter
-            var audioSource = new BufferAudioSource(File.ReadAllBytes(@"8k\pizza\pizza_veg_audio_8k.wav"));
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            var lModelLst = new LanguageModelList();
+            List<RecognitionResult> results = null;
 
-            SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig);
-            try
+            using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
             {
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("builtin:slm/general");
-
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
                 speechRecognizer.Recognize(audioSource, lModelLst);
 
                 Thread.Sleep(65000);
 
-                var result = speechRecognizer.WaitRecognitionResult();
-                var resultRecognized = result.Where(r => r.ResultCode == CPqDASR.RecognitionResultCode.RECOGNIZED).FirstOrDefault();
+                results = speechRecognizer.WaitRecognitionResult();
+            }
 
-                Assert.IsNotNull(resultRecognized);
-            }
-            catch (Exception ex)
+            var score = results?.
+                Where(r => r.ResultCode == CPqDASR.RecognitionResultCode.RECOGNIZED).
+                FirstOrDefault().Alternatives.
+                Where(a => a.Confidence >= 90).FirstOrDefault()?.Confidence;
+            Assert.IsNotNull(score);
+
+            var textFromFirstAlternative = results[0].Alternatives[0].Text.ToString();
+            Assert.AreEqual(TestsReferences.TextPizzaVeg, textFromFirstAlternative);
+        }
+
+        /// <summary>
+        /// Checa se é possível fazer um reconhecimento após ocorrer timeout de sessão por falta de uso
+        /// </summary>
+        [TestMethod]
+        public void RecogAfterSessionTimeout()
+        {
+            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            var lModelLst = new LanguageModelList();
+            List<RecognitionResult> results = null;
+
+            using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
             {
-                throw ex;
+                Thread.Sleep(65000);
+
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+                speechRecognizer.Recognize(audioSource, lModelLst);
+                results = speechRecognizer.WaitRecognitionResult();
             }
-            finally
+
+            var score = results?.
+                Where(r => r.ResultCode == CPqDASR.RecognitionResultCode.RECOGNIZED).
+                FirstOrDefault().Alternatives.
+                Where(a => a.Confidence >= 90).FirstOrDefault()?.Confidence;
+            Assert.IsNotNull(score);
+
+            var textFromFirstAlternative = results[0].Alternatives[0].Text.ToString();
+            Assert.AreEqual(TestsReferences.TextPizzaVeg, textFromFirstAlternative);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [TestMethod]
+        public void BasicContinuousModeOn()
+        {
+            var recogConfig = new RecognitionConfig
             {
-                speechRecognizer.Close();
+                ContinuousMode = true
+            };
+
+            var clientConfig = CreateClientConfigDefault(recogConfig);
+            var lModelLst = new LanguageModelList();
+            var audioSource = new BufferAudioSource(File.ReadAllBytes(TestsReferences.AudioContinuosMode));
+            List<RecognitionResult> results = null;
+            int i = 0;
+            List<string> segmentsText = new List<string>(new string[] {
+                TestsReferences.TextContinuousModeSeg1,
+                TestsReferences.TextContinuousModeSeg2,
+                TestsReferences.TextContinuousModeSeg3 });
+
+            using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
+            {
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+                speechRecognizer.Recognize(audioSource, lModelLst);
+
+                results = speechRecognizer.WaitRecognitionResult();
+
+                Assert.AreEqual(segmentsText.Count(), results.Count());
+
+                for (i = 0; i < segmentsText.Count(); i++)
+                {
+                    Assert.AreEqual(CPqDASR.RecognitionResultCode.RECOGNIZED, results[i].ResultCode);
+                    var textFromFirstAlternative = results[i].Alternatives[0].Text.ToString();
+                    Assert.AreEqual(segmentsText[i], textFromFirstAlternative);
+                }
             }
+
         }
 
         #endregion
@@ -664,43 +773,29 @@ namespace CPqDASRUnitTest.ASR
             return results;
         }
 
-        private void ExecuteMultiplesRecognitions(ClientConfig config)
+        private void ExecuteMultiplesRecognitions(ClientConfig config, int recogs, bool useEndSleep = true)
         {
-            SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(config);
-            int k = 0;
-            try
+            using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(config))
             {
-                var lModelLst = new LanguageModelList();
-                lModelLst.AddFromUri("builtin:slm/general");
-
-
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < recogs; i++)
                 {
-                    var audioSource = new FileAudioSource(@"8k\pizza\pizza_veg_audio_8k.wav");
+                    var audioSource = new FileAudioSource(TestsReferences.AudioCpf);
+                    var lModelLst = new LanguageModelList();
+                    lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
                     speechRecognizer.Recognize(audioSource, lModelLst);
-
                     var result = speechRecognizer.WaitRecognitionResult();
-                    var resultRecognized = result.Where(r => r.ResultCode == CPqDASR.RecognitionResultCode.RECOGNIZED).FirstOrDefault();
 
-                    Assert.IsNotNull(resultRecognized);
-                    k++;
-                    if (i < 3)
+                    Assert.AreEqual(CPqDASR.RecognitionResultCode.RECOGNIZED, result[0].ResultCode);
+
+                    if (i < recogs - 1)
                     {
                         Thread.Sleep(3000);
                     }
                     else
                     {
-                        Thread.Sleep(5500);
+                        Thread.Sleep(6000);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                speechRecognizer.Close();
             }
         }
 
@@ -710,34 +805,31 @@ namespace CPqDASRUnitTest.ASR
         /// <returns></returns>
         private RecognitionConfig CreateConfigDefault()
         {
-            return new RecognitionConfig()
-            {
-                MaxSentences = 2,
-            };
+            return new RecognitionConfig(){};
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="recognitionConfig"></param>
+        /// <param name="recogConfig"></param>
         /// <returns></returns>
-        private ClientConfig CreateClientConfigDefault(RecognitionConfig recognitionConfig)
+        private ClientConfig CreateClientConfigDefault(RecognitionConfig recogConfig)
         {
-            return this.CreateClientConfigDefault(recognitionConfig, "ws://vmh123:8025/asr-server/asr");
+            return CreateClientConfigDefault(recogConfig, TestsReferences.InternalASRURL);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="recognitionConfig"></param>
+        /// <param name="recogConfig"></param>
         /// <returns></returns>
-        private ClientConfig CreateClientConfigDefault(RecognitionConfig recognitionConfig, string serverUrl)
+        private ClientConfig CreateClientConfigDefault(RecognitionConfig recogConfig, string serverUrl)
         {
             return new ClientConfig()
             {
                 ServerUrl = serverUrl,
-                RecogConfig = recognitionConfig,
-                UserAgent = "desktop=DELL; os=Windows 10 Pro 64 bits; client=.NET Core; app=CPqDASRUnitTest",
+                RecogConfig = recogConfig,
+                UserAgent = "desktop=x64; os=Some Crazy Windows; client=.NET Core; app=CPqDASRUnitTest",
                 MaxWaitSeconds = 20000,
                 ConnectOnRecognize = false
             };
@@ -746,12 +838,12 @@ namespace CPqDASRUnitTest.ASR
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="recognitionConfig"></param>
+        /// <param name="recogConfig"></param>
         /// <param name="serverUri"></param>
         /// <param name="user"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        private ClientConfig CreateClientWithCredentials(RecognitionConfig recognitionConfig, string serverUri, string user, string password)
+        private ClientConfig CreateClientWithCredentials(RecognitionConfig recogConfig, string serverUri, string user, string password)
         {
             var credentials = new Credentials()
             {
@@ -759,7 +851,7 @@ namespace CPqDASRUnitTest.ASR
                 Password = password
             };
 
-            var clientConfig = this.CreateClientConfigDefault(recognitionConfig, serverUri);
+            var clientConfig = CreateClientConfigDefault(recogConfig, serverUri);
             clientConfig.Credentials = credentials;
 
             return clientConfig;
@@ -775,7 +867,7 @@ namespace CPqDASRUnitTest.ASR
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
 
-            while (!this.Events.IsAllEventsPassed() && !this.timeout)
+            while (!Events.IsAllEventsPassed() && !timeout)
             {
                 await Task.Delay(1000);
             }
@@ -790,7 +882,7 @@ namespace CPqDASRUnitTest.ASR
         /// <param name="e"></param>
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            this.timeout = true;
+            timeout = true;
         }
 
         /// <summary>
