@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,109 +10,33 @@ namespace CPqDASR.Config
 
         #region Headers
 
-        internal string HeaderDecoderStartInputTimers
-        {
-            get
-            {
-                return "decoder.startInputTimers";
-            }
-        }
+        internal const string HeaderDecoderStartInputTimers = "decoder.startInputTimers";
 
-        internal string HeaderDecoderMaxSentences
-        {
-            get
-            {
-                return "decoder.maxSentences";
-            }
-        }
+        internal const string HeaderDecoderMaxSentences = "decoder.maxSentences";
 
-        internal string HeaderHeadMarginMilliseconds
-        {
-            get
-            {
-                return "endpointer.headMargin";
-            }
-        }
+        internal const string HeaderHeadMarginMilliseconds = "endpointer.headMargin";
 
-        internal string HeaderTailMarginMilliseconds
-        {
-            get
-            {
-                return "endpointer.tailMargin";
-            }
-        }
+        internal const string HeaderTailMarginMilliseconds = "endpointer.tailMargin";
 
-        internal string HeaderWaitEndMilliseconds
-        {
-            get
-            {
-                return "endpointer.waitEnd";
-            }
-        }
+        internal const string HeaderWaitEndMilliseconds = "endpointer.waitEnd";
 
-        internal string HeaderEndpointerLevelThreshold
-        {
-            get
-            {
-                return "endpointer.levelThreshold";
-            }
-        }
+        internal const string HeaderEndpointerLevelThreshold = "endpointer.levelThreshold";
 
-        internal string HeaderEndpointerAutoLevelLen
-        {
-            get
-            {
-                return "endpointer.autoLevelLen";
-            }
-        }
+        internal const string HeaderEndpointerAutoLevelLen = "endpointer.autoLevelLen";
 
-        internal string HeaderEndpointerLevelMode
-        {
-            get
-            {
-                return "endpointer.levelMode";
-            }
-        }
+        internal const string HeaderEndpointerLevelMode = "endpointer.levelMode";
 
-        internal string HeaderNoInputTimeoutEnabled
-        {
-            get
-            {
-                return "noInputTimeout.enabled";
-            }
-        }
+        internal const string HeaderNoInputTimeoutEnabled = "noInputTimeout.enabled";
 
-        internal string HeaderNoInputTimeoutMilliseconds
-        {
-            get
-            {
-                return "noInputTimeout.value";
-            }
-        }
+        internal const string HeaderNoInputTimeoutMilliseconds = "noInputTimeout.value";
 
-        internal string HeaderRecognitionTimeoutEnabled
-        {
-            get
-            {
-                return "recognitionTimeout.enabled";
-            }
-        }
+        internal const string HeaderRecognitionTimeoutEnabled = "recognitionTimeout.enabled";
 
-        internal string HeaderRecognitionTimeoutMilliseconds
-        {
-            get
-            {
-                return "recognitionTimeout.value";
-            }
-        }
+        internal const string HeaderRecognitionTimeoutMilliseconds = "recognitionTimeout.value";
 
-        internal string HeaderContinuousMode
-        {
-            get
-            {
-                return "decoder.continuousMode";
-            }
-        }
+        internal const string HeaderContinuousMode = "decoder.continuousMode";
+
+        internal const string HeaderConfidenceThreshold = "decoder.confidenceThreshold";
 
         #endregion
 
@@ -127,7 +51,7 @@ namespace CPqDASR.Config
         /// Número máximo de resultados prováveis (sentenças alternativas) gerados pelo reconhecimento
         /// </summary>
         public int? MaxSentences { get; set; }
-        
+
         /// <summary>
         /// Tempo de espera pelo início de fala, após a solicitação de reconhecimento
         /// </summary>
@@ -181,7 +105,7 @@ namespace CPqDASR.Config
         /// <summary>
         /// Limiar de amplitude do sinal que será compreendido como silêncio. Utilizado se levelMode = 2
         /// </summary>
-        public int? EndpointerLevelThreshold { get; set; }
+        public float? EndpointerLevelThreshold { get; set; }
 
         /// <summary>
         /// Define se o modo de reconhecimento será continuo

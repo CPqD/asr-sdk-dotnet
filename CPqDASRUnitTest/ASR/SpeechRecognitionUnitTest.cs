@@ -1,4 +1,4 @@
-﻿using CPqDAsr.ASR;
+using CPqDAsr.ASR;
 using CPqDASR.ASR;
 using CPqDASR.Communication;
 using CPqDASR.Config;
@@ -167,7 +167,7 @@ namespace CPqDASRUnitTest.ASR
                 NoInputTimeoutEnabled = false,
                 NoInputTimeoutMilliseconds = 2000,
                 RecognitionTimeoutEnabled = false,
-                RecognitionTimeoutMilliseconds = 5000,
+                RecognitionTimeoutMilliseconds = 65000,
                 StartInputTimers = false,
                 TailMarginMilliseconds = 450,
                 WaitEndMilliseconds = 900
@@ -188,7 +188,8 @@ namespace CPqDASRUnitTest.ASR
                 throw new InternalTestFailureException(ex.Message);
             }
 
-            Assert.AreEqual(CPqDASR.RecognitionResultCode.NO_MATCH, results[0].ResultCode);
+            Assert.AreEqual(results[0].Alternatives[0].Confidence == recogConfig.ConfidenceThreshold ?
+                CPqDASR.RecognitionResultCode.RECOGNIZED : CPqDASR.RecognitionResultCode.NO_MATCH, results[0].ResultCode);
         }
 
         /// <summary>

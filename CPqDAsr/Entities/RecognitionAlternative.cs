@@ -1,4 +1,4 @@
-﻿using CPqDAsr.Entities;
+using CPqDAsr.Entities;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 

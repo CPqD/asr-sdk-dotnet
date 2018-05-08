@@ -1,4 +1,4 @@
-﻿using CPqDASR.ASR;
+using CPqDASR.ASR;
 using System;
 using System.Collections.Generic;
 using System.Text;

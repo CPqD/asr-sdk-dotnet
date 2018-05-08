@@ -1,4 +1,4 @@
-﻿namespace CPqDASR.Entities
+namespace CPqDASR.Entities
 {
     public class Interpretation
     {

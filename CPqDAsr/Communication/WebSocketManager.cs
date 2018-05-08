@@ -1,4 +1,4 @@
-﻿using CPqDASR.Events;
+using CPqDASR.Events;
 using CPqDWebSocketStandard;
 using System;
 using System.Threading;

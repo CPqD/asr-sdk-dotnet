@@ -1,4 +1,4 @@
-﻿using CPqDASR.Entities;
+using CPqDASR.Entities;
 using CPqDASR.Protocol;
 using CPqDASR.Communication;
 using CPqDASR.Config;
@@ -76,7 +76,7 @@ namespace CPqDASR.ASR
         /// <summary>
         /// Quantidade de sentenças retornadas, de 1 a 5
         /// </summary>
-        public short MaxSentence
+        public int MaxSentence
         {
             get { return objASR.MaxSentence; }
             set { objASR.MaxSentence = value; }

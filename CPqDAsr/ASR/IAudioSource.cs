@@ -1,4 +1,4 @@
-﻿namespace CPqDASR.ASR
+namespace CPqDASR.ASR
 {
     public interface IAudioSource
     {

@@ -1,4 +1,4 @@
-﻿namespace CPqDASR.Communication
+namespace CPqDASR.Communication
 {
     public class Credentials
     {

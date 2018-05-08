@@ -1,4 +1,4 @@
-﻿using CPqDASR;
+using CPqDASR;
 using CPqDASR.Protocol;
 using Newtonsoft.Json;
 using System;

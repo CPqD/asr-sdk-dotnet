@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -183,7 +183,9 @@ namespace CPqDASR
         /// <summary>
         /// Define a temporização de espera pelo resultado do reconhecimento. => Numero inteiro (em milis).
         /// </summary>
-        RecognitionTimeoutValue
+        RecognitionTimeoutValue,
+
+        ConfidenceThreshold
     }
 
     public enum RecognitionErrorCode

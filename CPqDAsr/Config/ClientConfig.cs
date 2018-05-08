@@ -1,4 +1,4 @@
-﻿using CPqDASR.Communication;
+using CPqDASR.Communication;
 
 namespace CPqDASR.Config
 {

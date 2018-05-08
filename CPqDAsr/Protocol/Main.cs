@@ -1,4 +1,4 @@
-﻿using CPqDASR.Entities;
+using CPqDASR.Entities;
 using CPqDASR.Extensions;
 using CPqDASR.Communication;
 using CPqDASR.Config;
@@ -119,7 +119,7 @@ namespace CPqDASR.Protocol
 
         private SAMPLE_RATE enuSampleRate = SAMPLE_RATE.SAMPLE_RATE_16;
 
-        private short shoMaxSentence = 5;
+        private int shoMaxSentence = 5;
 
         /// <summary>
         /// Armazena a sessão de referencia no ASR
@@ -181,7 +181,7 @@ namespace CPqDASR.Protocol
         /// <summary>
         /// Quantidade de sentenças retornadas, de 1 a 5
         /// </summary>
-        public short MaxSentence
+        public int MaxSentence
         {
             get { return shoMaxSentence; }
             set { shoMaxSentence = value; }
@@ -517,27 +517,33 @@ namespace CPqDASR.Protocol
             Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
             Console.WriteLine(strValue);
             Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-
-            strValue = strValue.Replace("\r\n", "\r");
-            var arrValues = strValue.Split('\r');
-            var strResponse = GetResponse(arrValues);
-            IsListening = arrValues.First(p => p.IndexOf("Session-Status: ") != -1).Replace("Session-Status: ", "") == "LISTENING";
-
-            Console.WriteLine("IsListening: " + IsListening);
-            switch (strResponse.ToEnum<WS_RESPONSES>())
+            try
             {
-                case WS_RESPONSES.RESPONSE: //respostas gerais do servidor
-                    ValidateResponse(arrValues);
-                    break;
-                case WS_RESPONSES.RECOGNITION_RESULT: //resposta de reconhecimento de fala
-                    ValidateRecognitionResult(arrValues);
-                    break;
-                case WS_RESPONSES.START_OF_SPEECH: //servidor apontando que iniciou o reconhecimento de voz do audio enviado
-                    ValidateStartOfSpeech(arrValues);
-                    break;
-                case WS_RESPONSES.END_OF_SPEECH: //resposta para apontar que foi identificado silencio e que portanto parou-se de realizar o reconhecimento
-                    ValidateEndOfSpeech(arrValues);
-                    break;
+                strValue = strValue.Replace("\r\n", "\r");
+                var arrValues = strValue.Split('\r');
+                var strResponse = GetResponse(arrValues);
+                IsListening = arrValues.First(p => p.IndexOf("Session-Status: ") != -1).Replace("Session-Status: ", "") == "LISTENING";
+
+                Console.WriteLine("IsListening: " + IsListening);
+                switch (strResponse.ToEnum<WS_RESPONSES>())
+                {
+                    case WS_RESPONSES.RESPONSE: //respostas gerais do servidor
+                        ValidateResponse(arrValues);
+                        break;
+                    case WS_RESPONSES.RECOGNITION_RESULT: //resposta de reconhecimento de fala
+                        ValidateRecognitionResult(arrValues);
+                        break;
+                    case WS_RESPONSES.START_OF_SPEECH: //servidor apontando que iniciou o reconhecimento de voz do audio enviado
+                        ValidateStartOfSpeech(arrValues);
+                        break;
+                    case WS_RESPONSES.END_OF_SPEECH: //resposta para apontar que foi identificado silencio e que portanto parou-se de realizar o reconhecimento
+                        ValidateEndOfSpeech(arrValues);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
@@ -807,45 +813,69 @@ namespace CPqDASR.Protocol
         /// Set parameters for RecognitionConfiguration
         /// </summary>
         /// <param name="objRecognitionConfig">Reference for an instance of RecognitionConfig</param>
-        /// <param name="Key">Key to be set</param>
-        /// <param name="Value">Value to be set</param>
-        private void SetParametersSettings(ref RecognitionConfig objRecognitionConfig, string Key, string Value)
+        /// <param name="key">Key to be set</param>
+        /// <param name="value">Value to be set</param>
+        private void SetParametersSettings(ref RecognitionConfig objRecognitionConfig, string key, string value)
         {
-            if (Key == "decoder.startInputTimers")
-                objRecognitionConfig.StartInputTimers = bool.Parse(Value.ToString());
+            value = value.Trim();
 
-            if (Key == "decoder.maxSentences")
-                objRecognitionConfig.MaxSentences = int.Parse(Value.ToString());
-
-            if (Key == "endpointer.headMargin")
-                objRecognitionConfig.HeadMarginMilliseconds = int.Parse(Value.ToString());
-
-            if (Key == "endpointer.tailMargin")
-                objRecognitionConfig.TailMarginMilliseconds = int.Parse(Value.ToString());
-
-            if (Key == "endpointer.waitEnd")
-                objRecognitionConfig.WaitEndMilliseconds = int.Parse(Value.ToString());
-
-            if (Key == "endpointer.levelThreshold")
-                objRecognitionConfig.EndpointerLevelThreshold = short.Parse(Value.ToString());
-
-            if (Key == "endpointer.autoLevelLen")
-                objRecognitionConfig.EndpointerAutoLevelLen = int.Parse(Value.ToString());
-
-            if (Key == "endpointer.levelMode")
-                objRecognitionConfig.EndpointerLevelMode = int.Parse(Value.ToString());
-
-            if (Key == "noInputTimeout.enabled")
-                objRecognitionConfig.NoInputTimeoutEnabled = bool.Parse(Value.ToString());
-
-            if (Key == "noInputTimeout.value")
-                objRecognitionConfig.NoInputTimeoutMilliseconds = int.Parse(Value.ToString());
-
-            if (Key == "recognitionTimeout.enabled")
-                objRecognitionConfig.RecognitionTimeoutEnabled = bool.Parse(Value.ToString());
-
-            if (Key == "recognitionTimeout.value")
-                objRecognitionConfig.RecognitionTimeoutMilliseconds = int.Parse(Value.ToString());
+            if (key?.Equals(RecognitionConfig.HeaderDecoderStartInputTimers) ?? false)
+            {
+                objRecognitionConfig.StartInputTimers = bool.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderDecoderMaxSentences) ?? false)
+            {
+                objRecognitionConfig.MaxSentences = int.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderHeadMarginMilliseconds) ?? false)
+            {
+                objRecognitionConfig.HeadMarginMilliseconds = int.Parse(value.ToString());
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderTailMarginMilliseconds) ?? false)
+            {
+                objRecognitionConfig.TailMarginMilliseconds = int.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderWaitEndMilliseconds) ?? false)
+            {
+                objRecognitionConfig.WaitEndMilliseconds = int.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderEndpointerLevelThreshold) ?? false)
+            {
+                value = value.Replace(".", ",");
+                objRecognitionConfig.EndpointerLevelThreshold = float.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderEndpointerAutoLevelLen) ?? false)
+            {
+                objRecognitionConfig.EndpointerAutoLevelLen = int.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderEndpointerLevelMode) ?? false)
+            {
+                objRecognitionConfig.EndpointerLevelMode = int.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderNoInputTimeoutEnabled) ?? false)
+            {
+                objRecognitionConfig.NoInputTimeoutEnabled = bool.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderNoInputTimeoutMilliseconds) ?? false)
+            {
+                objRecognitionConfig.NoInputTimeoutMilliseconds = int.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderRecognitionTimeoutEnabled) ?? false)
+            {
+                objRecognitionConfig.RecognitionTimeoutEnabled = bool.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderRecognitionTimeoutMilliseconds) ?? false)
+            {
+                objRecognitionConfig.RecognitionTimeoutMilliseconds = int.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderConfidenceThreshold) ?? false)
+            {
+                objRecognitionConfig.ConfidenceThreshold = int.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderContinuousMode) ?? false)
+            {
+                objRecognitionConfig.ContinuousMode = bool.Parse(value);
+            }
         }
 
         /// <summary>
@@ -878,43 +908,46 @@ namespace CPqDASR.Protocol
             StringBuilder str = new StringBuilder();
 
             if (objRecognitionConfig.StartInputTimers != null)
-                str.AppendLine(string.Format("{0}: {1}", objRecognitionConfig.HeaderDecoderStartInputTimers, objRecognitionConfig.StartInputTimers));
+                str.AppendLine(string.Format("{0}: {1}", RecognitionConfig.HeaderDecoderStartInputTimers, objRecognitionConfig.StartInputTimers.ToString().ToLower()));
 
             if (objRecognitionConfig.MaxSentences != null)
-                str.AppendLine(string.Format("{0}: {1}", objRecognitionConfig.HeaderDecoderMaxSentences, objRecognitionConfig.MaxSentences));
+                str.AppendLine(string.Format("{0}: {1}", RecognitionConfig.HeaderDecoderMaxSentences, objRecognitionConfig.MaxSentences));
 
             if (objRecognitionConfig.HeadMarginMilliseconds != null)
-                str.AppendLine(string.Format("{0}: {1}", objRecognitionConfig.HeaderHeadMarginMilliseconds, objRecognitionConfig.HeadMarginMilliseconds));
+                str.AppendLine(string.Format("{0}: {1}", RecognitionConfig.HeaderHeadMarginMilliseconds, objRecognitionConfig.HeadMarginMilliseconds));
 
             if (objRecognitionConfig.TailMarginMilliseconds != null)
-                str.AppendLine(string.Format("{0}: {1}", objRecognitionConfig.HeaderTailMarginMilliseconds, objRecognitionConfig.TailMarginMilliseconds));
+                str.AppendLine(string.Format("{0}: {1}", RecognitionConfig.HeaderTailMarginMilliseconds, objRecognitionConfig.TailMarginMilliseconds));
 
             if (objRecognitionConfig.WaitEndMilliseconds != null)
-                str.AppendLine(string.Format("{0}: {1}", objRecognitionConfig.HeaderWaitEndMilliseconds, objRecognitionConfig.WaitEndMilliseconds));
+                str.AppendLine(string.Format("{0}: {1}", RecognitionConfig.HeaderWaitEndMilliseconds, objRecognitionConfig.WaitEndMilliseconds));
 
             if (objRecognitionConfig.EndpointerLevelThreshold != null)
-                str.AppendLine(string.Format("{0}: {1}", objRecognitionConfig.HeaderEndpointerLevelThreshold, objRecognitionConfig.EndpointerLevelThreshold));
+                str.AppendLine(string.Format("{0}: {1}", RecognitionConfig.HeaderEndpointerLevelThreshold, objRecognitionConfig.EndpointerLevelThreshold));
 
             if (objRecognitionConfig.EndpointerAutoLevelLen != null)
-                str.AppendLine(string.Format("{0}: {1}", objRecognitionConfig.HeaderEndpointerAutoLevelLen, objRecognitionConfig.EndpointerAutoLevelLen));
+                str.AppendLine(string.Format("{0}: {1}", RecognitionConfig.HeaderEndpointerAutoLevelLen, objRecognitionConfig.EndpointerAutoLevelLen));
 
             if (objRecognitionConfig.EndpointerLevelMode != null)
-                str.AppendLine(string.Format("{0}: {1}", objRecognitionConfig.HeaderEndpointerLevelMode, (int)objRecognitionConfig.EndpointerLevelMode));
+                str.AppendLine(string.Format("{0}: {1}", RecognitionConfig.HeaderEndpointerLevelMode, objRecognitionConfig.EndpointerLevelMode));
 
             if (objRecognitionConfig.NoInputTimeoutEnabled != null)
-                str.AppendLine(string.Format("{0}: {1}", objRecognitionConfig.HeaderNoInputTimeoutEnabled, objRecognitionConfig.NoInputTimeoutEnabled));
+                str.AppendLine(string.Format("{0}: {1}", RecognitionConfig.HeaderNoInputTimeoutEnabled, objRecognitionConfig.NoInputTimeoutEnabled.ToString().ToLower()));
 
             if (objRecognitionConfig.NoInputTimeoutMilliseconds != null)
-                str.AppendLine(string.Format("{0}: {1}", objRecognitionConfig.HeaderNoInputTimeoutMilliseconds, objRecognitionConfig.NoInputTimeoutMilliseconds));
+                str.AppendLine(string.Format("{0}: {1}", RecognitionConfig.HeaderNoInputTimeoutMilliseconds, objRecognitionConfig.NoInputTimeoutMilliseconds));
 
             if (objRecognitionConfig.RecognitionTimeoutEnabled != null)
-                str.AppendLine(string.Format("{0}: {1}", objRecognitionConfig.HeaderRecognitionTimeoutEnabled, objRecognitionConfig.RecognitionTimeoutEnabled));
+                str.AppendLine(string.Format("{0}: {1}", RecognitionConfig.HeaderRecognitionTimeoutEnabled, objRecognitionConfig.RecognitionTimeoutEnabled.ToString().ToLower()));
 
             if (objRecognitionConfig.RecognitionTimeoutMilliseconds != null)
-                str.AppendLine(string.Format("{0}: {1}", objRecognitionConfig.HeaderRecognitionTimeoutMilliseconds, objRecognitionConfig.RecognitionTimeoutMilliseconds));
+                str.AppendLine(string.Format("{0}: {1}", RecognitionConfig.HeaderRecognitionTimeoutMilliseconds, objRecognitionConfig.RecognitionTimeoutMilliseconds));
 
             if (objRecognitionConfig.ContinuousMode != null)
-                str.AppendLine(string.Format("{0}: {1}", objRecognitionConfig.HeaderContinuousMode, objRecognitionConfig.ContinuousMode.ToString().ToLower()));
+                str.AppendLine(string.Format("{0}: {1}", RecognitionConfig.HeaderContinuousMode, objRecognitionConfig.ContinuousMode.ToString().ToLower()));
+
+            if (objRecognitionConfig.ConfidenceThreshold != null)
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderConfidenceThreshold, objRecognitionConfig.ConfidenceThreshold));
 
             return str.ToString();
         }
@@ -930,40 +963,43 @@ namespace CPqDASR.Protocol
             switch (enu)
             {
                 case RecognitionParameters.DecoderStartInputTimers:
-                    strValue = "decoder.startInputTimers";
+                    strValue = RecognitionConfig.HeaderDecoderStartInputTimers;
                     break;
                 case RecognitionParameters.DecoderMaxSentences:
-                    strValue = "decoder.maxSentences";
+                    strValue = RecognitionConfig.HeaderDecoderMaxSentences;
                     break;
                 case RecognitionParameters.EndPointerHeadMargin:
-                    strValue = "endpointer.headMargin";
+                    strValue = RecognitionConfig.HeaderHeadMarginMilliseconds;
                     break;
                 case RecognitionParameters.EndPointerTailMargin:
-                    strValue = "endpointer.tailMargin";
+                    strValue = RecognitionConfig.HeaderTailMarginMilliseconds;
                     break;
                 case RecognitionParameters.EndPointerWaitEnd:
-                    strValue = "endpointer.waitEnd";
+                    strValue = RecognitionConfig.HeaderWaitEndMilliseconds;
                     break;
                 case RecognitionParameters.EndPointerLevelThreshold:
-                    strValue = "endpointer.levelThreshold";
+                    strValue = RecognitionConfig.HeaderEndpointerLevelThreshold;
                     break;
                 case RecognitionParameters.EndPointerAutoLevelLen:
-                    strValue = "endpointer.autoLevelLen";
+                    strValue = RecognitionConfig.HeaderEndpointerAutoLevelLen;
                     break;
                 case RecognitionParameters.EndPointerLevelMode:
-                    strValue = "endpointer.levelMode";
+                    strValue = RecognitionConfig.HeaderEndpointerLevelMode;
                     break;
                 case RecognitionParameters.NoInputTimeoutEnabled:
-                    strValue = "noInputTimeout.enabled";
+                    strValue = RecognitionConfig.HeaderNoInputTimeoutEnabled;
                     break;
                 case RecognitionParameters.NoInputTimeoutValue:
-                    strValue = "noInputTimeout.value";
+                    strValue = RecognitionConfig.HeaderNoInputTimeoutMilliseconds;
                     break;
                 case RecognitionParameters.RecognitionTimeoutEnabled:
-                    strValue = "recognitionTimeout.enabled";
+                    strValue = RecognitionConfig.HeaderRecognitionTimeoutEnabled;
                     break;
                 case RecognitionParameters.RecognitionTimeoutValue:
-                    strValue = "recognitionTimeout.value";
+                    strValue = RecognitionConfig.HeaderRecognitionTimeoutMilliseconds;
+                    break;
+                case RecognitionParameters.ConfidenceThreshold:
+                    strValue = RecognitionConfig.HeaderConfidenceThreshold;
                     break;
             }
 
@@ -980,44 +1016,48 @@ namespace CPqDASR.Protocol
             RecognitionParameters enuParameter;
             switch (strValue)
             {
-                case "decoder.startInputTimers":
+                case RecognitionConfig.HeaderDecoderStartInputTimers:
                     enuParameter = RecognitionParameters.DecoderStartInputTimers;
                     break;
-                case "decoder.maxSentences":
+                case RecognitionConfig.HeaderDecoderMaxSentences:
                     enuParameter = RecognitionParameters.DecoderMaxSentences;
                     break;
-                case "endpointer.headMargin":
+                case RecognitionConfig.HeaderHeadMarginMilliseconds:
                     enuParameter = RecognitionParameters.EndPointerHeadMargin;
                     break;
-                case "endpointer.tailMargin":
+                case RecognitionConfig.HeaderTailMarginMilliseconds:
                     enuParameter = RecognitionParameters.EndPointerTailMargin;
                     break;
-                case "endpointer.waitEnd":
+                case RecognitionConfig.HeaderWaitEndMilliseconds:
                     enuParameter = RecognitionParameters.EndPointerWaitEnd;
                     break;
-                case "endpointer.levelThreshold":
+                case RecognitionConfig.HeaderEndpointerLevelThreshold:
                     enuParameter = RecognitionParameters.EndPointerLevelThreshold;
                     break;
-                case "endpointer.autoLevelLen":
+                case RecognitionConfig.HeaderEndpointerAutoLevelLen:
                     enuParameter = RecognitionParameters.EndPointerAutoLevelLen;
                     break;
-                case "endpointer.levelMode":
+                case RecognitionConfig.HeaderEndpointerLevelMode:
                     enuParameter = RecognitionParameters.EndPointerLevelMode;
                     break;
-                case "noInputTimeout.enabled":
+                case RecognitionConfig.HeaderNoInputTimeoutEnabled:
                     enuParameter = RecognitionParameters.NoInputTimeoutEnabled;
                     break;
-                case "noInputTimeout.value":
+                case RecognitionConfig.HeaderNoInputTimeoutMilliseconds:
                     enuParameter = RecognitionParameters.NoInputTimeoutValue;
                     break;
-                case "recognitionTimeout.enabled":
+                case RecognitionConfig.HeaderRecognitionTimeoutEnabled:
                     enuParameter = RecognitionParameters.RecognitionTimeoutEnabled;
                     break;
-                case "recognitionTimeout.value":
+                case RecognitionConfig.HeaderRecognitionTimeoutMilliseconds:
                     enuParameter = RecognitionParameters.RecognitionTimeoutValue;
                     break;
+                case RecognitionConfig.HeaderConfidenceThreshold:
+                    enuParameter = RecognitionParameters.ConfidenceThreshold;
+                    break;
                 default:
-                    throw new Exception("Recognition Parameters invalid");
+                    enuParameter = RecognitionParameters.DecoderMaxSentences;
+                    break;
             }
 
             return enuParameter;

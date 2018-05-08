@@ -1,4 +1,4 @@
-﻿using CPqDASR.Extensions;
+using CPqDASR.Extensions;
 using CPqDASR.Config;
 
 namespace CPqDASR.Entities

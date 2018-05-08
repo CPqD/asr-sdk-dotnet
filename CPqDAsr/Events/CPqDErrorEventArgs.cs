@@ -1,4 +1,4 @@
-﻿using CPqDASR;
+using CPqDASR;
 using System;
 
 namespace CPqDASR.Events

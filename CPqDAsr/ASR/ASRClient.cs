@@ -1,4 +1,4 @@
-﻿using CPqDASR.Entities;
+using CPqDASR.Entities;
 using CPqDASR.Protocol;
 using CPqDASR.Config;
 using CPqDASR.Events;
@@ -320,7 +320,7 @@ namespace CPqDASR.ASR
         private void StopSendAudio()
         {
             _shouldStop = true;
-            //this.thrSendAudio.Abort();
+            this.thrSendAudio.Abort();
         }
         private volatile bool _shouldStop;
 

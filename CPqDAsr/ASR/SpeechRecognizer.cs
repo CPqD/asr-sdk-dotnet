@@ -1,4 +1,4 @@
-﻿using CPqDAsr.ASR;
+using CPqDAsr.ASR;
 using CPqDAsr.Entities;
 using CPqDASR.Config;
 using CPqDASR.Entities;
