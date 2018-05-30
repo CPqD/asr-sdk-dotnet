@@ -730,7 +730,6 @@ namespace CPqDASRUnitTest.ASR
 
             var clientConfig = CreateClientConfigDefault(recogConfig);
             var lModelLst = new LanguageModelList();
-            var audioSource = new BufferAudioSource(File.ReadAllBytes(TestsReferences.AudioContinuosMode));
             List<RecognitionResult> results = null;
             int i = 0;
             List<string> segmentsText = new List<string>(new string[] {
@@ -740,12 +739,12 @@ namespace CPqDASRUnitTest.ASR
 
             using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
             {
+                var audioSource = new FileAudioSource(File.ReadAllBytes(TestsReferences.AudioContinuosMode));
                 lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
                 speechRecognizer.Recognize(audioSource, lModelLst);
 
                 results = speechRecognizer.WaitRecognitionResult();
-
-                Assert.AreEqual(segmentsText.Count(), results.Count());
+                Assert.IsTrue(segmentsText.Count() + 1 == results.Count());
 
                 for (i = 0; i < segmentsText.Count(); i++)
                 {
@@ -753,8 +752,27 @@ namespace CPqDASRUnitTest.ASR
                     var textFromFirstAlternative = results[i].Alternatives[0].Text.ToString();
                     Assert.AreEqual(segmentsText[i], textFromFirstAlternative);
                 }
+                Assert.AreEqual(CPqDASR.RecognitionResultCode.NO_SPEECH, results[i].ResultCode);
             }
 
+            using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
+            {
+                var audioSource = new BufferAudioSource(File.ReadAllBytes(TestsReferences.AudioContinuosMode));
+
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+                speechRecognizer.Recognize(audioSource, lModelLst);
+
+                results = speechRecognizer.WaitRecognitionResult();
+                Assert.IsTrue(segmentsText.Count() + 1 == results.Count());
+
+                for (i = 0; i < segmentsText.Count(); i++)
+                {
+                    Assert.AreEqual(CPqDASR.RecognitionResultCode.RECOGNIZED, results[i].ResultCode);
+                    var textFromFirstAlternative = results[i].Alternatives[0].Text.ToString();
+                    Assert.AreEqual(segmentsText[i], textFromFirstAlternative);
+                }
+                Assert.AreEqual(CPqDASR.RecognitionResultCode.NO_INPUT_TIMEOUT, results[i].ResultCode);
+            }
         }
 
         #endregion
