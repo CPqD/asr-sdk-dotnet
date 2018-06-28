@@ -231,7 +231,7 @@ namespace CPqDASR.ASR
                 tm.Close();
 
                 if (objResult == null)
-                    throw new RecognitionException(RecognitionErrorCode.FAILURE, "Recognition timeout");
+                    throw new RecognitionException(RecognitionErrorCode.FAILURE, "Response timeout");
             }
 
             //Reset wtResult to future interations

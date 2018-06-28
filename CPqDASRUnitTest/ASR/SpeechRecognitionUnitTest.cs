@@ -252,7 +252,7 @@ namespace CPqDASRUnitTest.ASR
             }
             catch (Exception ex)
             {
-                if (ex.Message.Equals("Recognition timeout"))
+                if (ex.Message.Equals("Response timeout"))
                 {
                     endWait = DateTime.Now;
                 }
