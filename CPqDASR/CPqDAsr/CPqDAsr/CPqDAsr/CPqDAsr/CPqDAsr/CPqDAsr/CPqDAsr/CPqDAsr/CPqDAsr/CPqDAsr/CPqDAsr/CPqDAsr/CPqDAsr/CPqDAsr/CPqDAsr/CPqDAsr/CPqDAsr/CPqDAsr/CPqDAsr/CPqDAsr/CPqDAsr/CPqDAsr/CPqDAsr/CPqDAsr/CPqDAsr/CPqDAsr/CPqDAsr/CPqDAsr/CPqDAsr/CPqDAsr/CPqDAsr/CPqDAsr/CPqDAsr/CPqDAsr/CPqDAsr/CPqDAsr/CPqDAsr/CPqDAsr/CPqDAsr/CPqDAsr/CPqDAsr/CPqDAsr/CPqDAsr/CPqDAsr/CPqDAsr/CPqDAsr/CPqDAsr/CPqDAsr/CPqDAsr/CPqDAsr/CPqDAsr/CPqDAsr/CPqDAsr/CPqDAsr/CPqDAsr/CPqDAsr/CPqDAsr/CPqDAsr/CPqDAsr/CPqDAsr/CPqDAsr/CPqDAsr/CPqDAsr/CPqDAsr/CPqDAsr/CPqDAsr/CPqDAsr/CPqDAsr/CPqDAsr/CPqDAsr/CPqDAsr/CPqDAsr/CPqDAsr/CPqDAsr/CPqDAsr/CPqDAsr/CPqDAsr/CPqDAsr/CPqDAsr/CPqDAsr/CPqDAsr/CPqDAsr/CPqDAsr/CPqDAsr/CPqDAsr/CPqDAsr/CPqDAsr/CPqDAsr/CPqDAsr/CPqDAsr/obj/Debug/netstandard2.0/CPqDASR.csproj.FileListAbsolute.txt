@@ -1,0 +1,12 @@
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDAsr\bin\Debug\netstandard2.0\CPqDASR.dll.config
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDAsr\bin\Debug\netstandard2.0\CPqDASR.deps.json
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDAsr\bin\Debug\netstandard2.0\CPqDASR.dll
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDAsr\bin\Debug\netstandard2.0\CPqDASR.pdb
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDAsr\obj\Debug\netstandard2.0\CPqDASR.csprojResolveAssemblyReference.cache
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDAsr\obj\Debug\netstandard2.0\CPqDASR.csproj.CoreCompileInputs.cache
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDAsr\obj\Debug\netstandard2.0\CPqDASR.AssemblyInfoInputs.cache
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDAsr\obj\Debug\netstandard2.0\CPqDASR.AssemblyInfo.cs
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDAsr\obj\Debug\netstandard2.0\CPqDASR.dll
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDAsr\obj\Debug\netstandard2.0\CPqDASR.pdb
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDAsr\bin\Debug\netstandard2.0\CPqDWSClient.dll
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDAsr\bin\Debug\netstandard2.0\CPqDWSClient.pdb
