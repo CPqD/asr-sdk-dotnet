@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CPqDWebSocketStandard\CPqDWebSocketStandard\CPqDWSClient.csproj" />
+    <ProjectReference Include="..\CPqDWSClient\CPqDWSClient\CPqDWSClient.csproj" />
   </ItemGroup>
 
 </Project>

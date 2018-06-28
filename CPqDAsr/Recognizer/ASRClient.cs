@@ -285,7 +285,7 @@ namespace CPqDASR.Recognizer
         /// <summary>
         /// Fecha a conexão com o servidor ASR
         /// </summary>
-        public void Close()
+        public new void Close()
         {
             ReleaseSession();
             objResult = new List<RecognitionResult>();
@@ -335,10 +335,8 @@ namespace CPqDASR.Recognizer
         /// </summary>
         private void StopSendAudio()
         {
-            _shouldStop = true;
             this.thrSendAudio.Abort();
         }
-        private volatile bool _shouldStop;
 
         private void ValidConnection()
         {

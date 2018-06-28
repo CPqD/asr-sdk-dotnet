@@ -967,7 +967,6 @@ namespace CPqDASRUnitTest.ASR
 
         private class EventsPassed
         {
-            //TODO: FMarino - Confirmar com o Baldin o porquê de determinados eventos não serem disparados
             internal bool OnSpeechStop { get; set; } = true;
 
             internal bool OnSpeechStart { get; set; }

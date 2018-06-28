@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CPqDAsr\CPqDASR.csproj" />
-    <ProjectReference Include="..\CPqDWebSocketStandard\CPqDWebSocketStandard\CPqDWSClient.csproj" />
+    <ProjectReference Include="..\CPqDASR\CPqDASR.csproj" />
+    <ProjectReference Include="..\CPqDWSClient\CPqDWSClient\CPqDWSClient.csproj" />
   </ItemGroup>
 
   <ItemGroup>

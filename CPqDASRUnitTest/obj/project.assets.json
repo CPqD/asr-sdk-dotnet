@@ -5611,13 +5611,13 @@
     },
     "CPqDASR/1.0.0": {
       "type": "project",
-      "path": "../CPqDAsr/CPqDASR.csproj",
-      "msbuildProject": "../CPqDAsr/CPqDASR.csproj"
+      "path": "../CPqDASR/CPqDASR.csproj",
+      "msbuildProject": "../CPqDASR/CPqDASR.csproj"
     },
     "CPqDWSClient/1.0.0": {
       "type": "project",
-      "path": "../CPqDWebSocketStandard/CPqDWebSocketStandard/CPqDWSClient.csproj",
-      "msbuildProject": "../CPqDWebSocketStandard/CPqDWebSocketStandard/CPqDWSClient.csproj"
+      "path": "../CPqDWSClient/CPqDWSClient/CPqDWSClient.csproj",
+      "msbuildProject": "../CPqDWSClient/CPqDWSClient/CPqDWSClient.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -5665,11 +5665,11 @@
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "C:\\Users\\fmarino\\Documents\\GitHub\\asr-sdk-dotnet\\CPqDAsr\\CPqDASR.csproj": {
-              "projectPath": "C:\\Users\\fmarino\\Documents\\GitHub\\asr-sdk-dotnet\\CPqDAsr\\CPqDASR.csproj"
+            "C:\\Users\\fmarino\\Documents\\GitHub\\asr-sdk-dotnet\\CPqDASR\\CPqDASR.csproj": {
+              "projectPath": "C:\\Users\\fmarino\\Documents\\GitHub\\asr-sdk-dotnet\\CPqDASR\\CPqDASR.csproj"
             },
-            "C:\\Users\\fmarino\\Documents\\GitHub\\asr-sdk-dotnet\\CPqDWebSocketStandard\\CPqDWebSocketStandard\\CPqDWSClient.csproj": {
-              "projectPath": "C:\\Users\\fmarino\\Documents\\GitHub\\asr-sdk-dotnet\\CPqDWebSocketStandard\\CPqDWebSocketStandard\\CPqDWSClient.csproj"
+            "C:\\Users\\fmarino\\Documents\\GitHub\\asr-sdk-dotnet\\CPqDWSClient\\CPqDWSClient\\CPqDWSClient.csproj": {
+              "projectPath": "C:\\Users\\fmarino\\Documents\\GitHub\\asr-sdk-dotnet\\CPqDWSClient\\CPqDWSClient\\CPqDWSClient.csproj"
             }
           }
         }
