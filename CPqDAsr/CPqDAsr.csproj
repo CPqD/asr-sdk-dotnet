@@ -6,9 +6,9 @@
 
   <ItemGroup>
     <Compile Remove="ASRClientFactory.cs" />
-    <Compile Remove="ASR\AudioEncoding.cs" />
-    <Compile Remove="ASR\FileASRClient.cs" />
-    <Compile Remove="ASR\StreamASRClient.cs" />
+    <Compile Remove="Recognizer\AudioEncoding.cs" />
+    <Compile Remove="Recognizer\FileASRClient.cs" />
+    <Compile Remove="Recognizer\StreamASRClient.cs" />
     <Compile Remove="CPqDTraceListener.cs" />
     <Compile Remove="Entities\Alternative.cs" />
     <Compile Remove="Entities\Parameters.cs" />
@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CPqDWebSocketStandard\CPqDWebSocketStandard\CPqDWebSocketStandard.csproj" />
+    <ProjectReference Include="..\CPqDWebSocketStandard\CPqDWebSocketStandard\CPqDWSClient.csproj" />
   </ItemGroup>
 
 </Project>

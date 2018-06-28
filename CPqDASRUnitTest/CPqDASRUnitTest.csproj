@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CPqDAsr\CPqDAsr.csproj" />
-    <ProjectReference Include="..\CPqDWebSocketStandard\CPqDWebSocketStandard\CPqDWebSocketStandard.csproj" />
+    <ProjectReference Include="..\CPqDAsr\CPqDASR.csproj" />
+    <ProjectReference Include="..\CPqDWebSocketStandard\CPqDWebSocketStandard\CPqDWSClient.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,7 +51,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="xcopy /Y /S &quot;$(SolutionDir)CPqDASRUnitTest\AudioTestesASR\*&quot; &quot;$(TargetDir)&quot;" />
+    <Exec Command="xcopy /Y /S &quot;$(SolutionDir)CPqDASRUnitTest\Resources\*&quot; &quot;$(TargetDir)&quot;" />
   </Target>
 
 </Project>

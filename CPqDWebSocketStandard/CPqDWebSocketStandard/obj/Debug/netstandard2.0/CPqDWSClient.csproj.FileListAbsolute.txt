@@ -1,0 +1,9 @@
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDWebSocketStandard\CPqDWebSocketStandard\bin\Debug\netstandard2.0\CPqDWSClient.deps.json
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDWebSocketStandard\CPqDWebSocketStandard\bin\Debug\netstandard2.0\CPqDWSClient.dll
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDWebSocketStandard\CPqDWebSocketStandard\bin\Debug\netstandard2.0\CPqDWSClient.pdb
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDWebSocketStandard\CPqDWebSocketStandard\obj\Debug\netstandard2.0\CPqDWSClient.csprojResolveAssemblyReference.cache
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDWebSocketStandard\CPqDWebSocketStandard\obj\Debug\netstandard2.0\CPqDWSClient.csproj.CoreCompileInputs.cache
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDWebSocketStandard\CPqDWebSocketStandard\obj\Debug\netstandard2.0\CPqDWSClient.AssemblyInfoInputs.cache
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDWebSocketStandard\CPqDWebSocketStandard\obj\Debug\netstandard2.0\CPqDWSClient.AssemblyInfo.cs
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDWebSocketStandard\CPqDWebSocketStandard\obj\Debug\netstandard2.0\CPqDWSClient.dll
+C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDWebSocketStandard\CPqDWebSocketStandard\obj\Debug\netstandard2.0\CPqDWSClient.pdb
