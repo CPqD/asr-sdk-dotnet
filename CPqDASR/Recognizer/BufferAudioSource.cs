@@ -38,7 +38,7 @@ namespace CPqDASR.Recognizer
 
         public BufferAudioSource(byte[] bytes) : this()
         {
-            buffer.Enqueue(bytes);
+            Write(bytes);
         }
 
         public bool Write(byte[] bytes)

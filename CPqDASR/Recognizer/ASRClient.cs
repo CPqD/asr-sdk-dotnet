@@ -309,7 +309,7 @@ namespace CPqDASR.Recognizer
                 do
                 {
                     buffer = AudioSource.Read();
-                    if (buffer != null && IsListening)
+                    if (IsListening)
                     {
                         Console.WriteLine("\n\nENVIA AUDIO\n\n");
                         //Envia um array de bytes do tamanho que está no buffer
