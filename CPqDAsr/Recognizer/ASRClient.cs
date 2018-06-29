@@ -205,7 +205,7 @@ namespace CPqDASR.Recognizer
             wtResult = new AutoResetEvent(false);
 
             if (!IsConnected)
-            {    
+            {
                 wtOpen.Reset();
                 isOpening = true;
                 Open(ClientConfig.ServerUrl, ClientConfig.Credentials);
@@ -213,9 +213,7 @@ namespace CPqDASR.Recognizer
                 isOpening = false;
                 ValidConnection();
             }
-            else
-            {
-            }
+
             base.StartRecognition(lModel, ClientConfig.RecogConfig);
         }
 
@@ -260,8 +258,8 @@ namespace CPqDASR.Recognizer
                 objResult.CopyTo(results);
                 objResult = null;
             }
-            
-            return results != null? new List<RecognitionResult>(results) : new List<RecognitionResult>();
+
+            return results != null ? new List<RecognitionResult>(results) : new List<RecognitionResult>();
         }
 
         public override void CancelRecognition()
@@ -289,7 +287,7 @@ namespace CPqDASR.Recognizer
         {
             ReleaseSession();
             objResult = new List<RecognitionResult>();
-            
+
         }
 
         #endregion
@@ -305,22 +303,29 @@ namespace CPqDASR.Recognizer
             try
             {
                 Debug.WriteLine("Envio de audio iniciado");
-                while (IsListening)
+
+                byte[] buffer = null;
+
+                do
                 {
-                    byte[] Buffer = AudioSource.Read();
-                    if (Buffer != null && IsListening)
+                    buffer = AudioSource.Read();
+                    if (buffer != null && IsListening)
                     {
                         Console.WriteLine("\n\nENVIA AUDIO\n\n");
                         //Envia um array de bytes do tamanho que está no buffer
-                        SendAudio(Buffer, Buffer.Length == 0);
+                        SendAudio(buffer, buffer.Length == 0);
                     }
-                }
-                AudioSource.Close();
+                } while (IsListening && buffer.Length > 0);
+
                 Debug.WriteLine("Envio de audio finalizado");
             }
             catch (Exception ex)
             {
                 WriteLog(String.Concat("Erro nos envios de pacote: " + ex.Message));
+            }
+            finally
+            {
+                AudioSource.Close();
             }
         }
 

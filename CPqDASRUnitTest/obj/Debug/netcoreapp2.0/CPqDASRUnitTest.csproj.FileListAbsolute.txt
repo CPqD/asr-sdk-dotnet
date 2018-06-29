@@ -19,3 +19,24 @@ C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDASRUnitTest\obj\Debug\netco
 C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDASRUnitTest\obj\Debug\netcoreapp2.0\CPqDASRUnitTest.pdb
 C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDASRUnitTest\bin\Debug\netcoreapp2.0\CPqDWSClient.dll
 C:\Users\fmarino\Documents\GitHub\asr-sdk-dotnet\CPqDASRUnitTest\bin\Debug\netcoreapp2.0\CPqDWSClient.pdb
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\bin\Debug\netcoreapp2.0\CPqDASRUnitTest.deps.json
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\bin\Debug\netcoreapp2.0\CPqDASRUnitTest.runtimeconfig.json
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\bin\Debug\netcoreapp2.0\CPqDASRUnitTest.runtimeconfig.dev.json
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\bin\Debug\netcoreapp2.0\CPqDASRUnitTest.dll
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\bin\Debug\netcoreapp2.0\CPqDASRUnitTest.pdb
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\bin\Debug\netcoreapp2.0\CPqDASR.dll
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\bin\Debug\netcoreapp2.0\CPqDWSClient.dll
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\bin\Debug\netcoreapp2.0\CPqDASR.pdb
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\bin\Debug\netcoreapp2.0\CPqDASR.dll.config
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\bin\Debug\netcoreapp2.0\CPqDWSClient.pdb
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\obj\Debug\netcoreapp2.0\CPqDASRUnitTest.csprojResolveAssemblyReference.cache
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\obj\Debug\netcoreapp2.0\CPqDASRUnitTest.TestsReferences.resources
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\obj\Debug\netcoreapp2.0\CPqDASRUnitTest.csproj.GenerateResource.Cache
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\obj\Debug\netcoreapp2.0\CPqDASRUnitTest.csproj.CoreCompileInputs.cache
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\obj\Debug\netcoreapp2.0\CPqDASRUnitTest.AssemblyInfoInputs.cache
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\obj\Debug\netcoreapp2.0\CPqDASRUnitTest.AssemblyInfo.cs
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\obj\Debug\netcoreapp2.0\CPqDASRUnitTest.dll
+C:\Users\fmarino\Documents\GitHub\ma oi\asr-sdk-dotnet\asr-sdk-dotnet\CPqDASRUnitTest\obj\Debug\netcoreapp2.0\CPqDASRUnitTest.pdb

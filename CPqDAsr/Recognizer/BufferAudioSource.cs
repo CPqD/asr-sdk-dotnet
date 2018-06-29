@@ -15,10 +15,11 @@
  ******************************************************************************/
 
 using CPqDASR.Recognizer;
+using System;
 using System.Collections.Generic;
+using System.Threading;
 
-
-namespace CPqDAsr.Recognizer
+namespace CPqDASR.Recognizer
 {
     /// <summary>
     /// 
@@ -28,10 +29,11 @@ namespace CPqDAsr.Recognizer
         private Queue<byte[]> buffer;
 
         private bool finished;
+        private object locker = new object();
 
         public BufferAudioSource()
         {
-            buffer = new Queue<byte[]>(); 
+            buffer = new Queue<byte[]>();
         }
 
         public BufferAudioSource(byte[] bytes) : this()
@@ -41,9 +43,31 @@ namespace CPqDAsr.Recognizer
 
         public bool Write(byte[] bytes)
         {
-            if (!finished)
+            if (!finished && bytes != null)
             {
-                buffer.Enqueue(bytes);
+                int incomingOffset = 0;
+
+                while (incomingOffset < bytes.Length)
+                {
+                    lock (locker)
+                    {
+                        try
+                        {
+                            byte[] chunck = new byte[4096];
+                            int length = Math.Min(chunck.Length, bytes.Length - incomingOffset);
+
+                            Buffer.BlockCopy(bytes, incomingOffset, chunck, 0, length);
+                            incomingOffset += length;
+
+                            // Transmit outbound buffer
+                            buffer.Enqueue(chunck);
+                        }
+                        finally
+                        {
+                            Monitor.PulseAll(locker);
+                        }
+                    }
+                }
                 return true;
             }
             else
@@ -54,23 +78,44 @@ namespace CPqDAsr.Recognizer
 
         public byte[] Read()
         {
-            if (buffer.Count > 0)
-            {
-                return buffer.Dequeue();
-            }
+            byte[] bytes = null;
 
-            return null;
+            if (buffer?.Count > 0 || !finished)
+            {
+                lock (locker)
+                {
+                    while (buffer?.Count == 0)
+                    {
+                        Monitor.Wait(locker);
+                    }
+                    bytes = buffer != null ? buffer.Dequeue() : new byte[0];
+                }
+            }
+            else
+            {
+                bytes = new byte[0];
+            }
+            return bytes;
         }
 
         public void Close()
         {
             buffer = null;
+            lock (locker)
+            {
+                Monitor.PulseAll(locker);
+            }
+
         }
 
         public void Finish()
         {
             finished = true;
-            Close();
+
+            lock (locker)
+            {
+                Monitor.PulseAll(locker);
+            }
         }
     }
 }

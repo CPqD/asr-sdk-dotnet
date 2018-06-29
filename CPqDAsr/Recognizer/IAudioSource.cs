@@ -16,12 +16,28 @@
 
 namespace CPqDASR.Recognizer
 {
+    /// <summary>
+    /// Represents an audio input source for the recognition process.
+    /// </summary>
     public interface IAudioSource
     {
+        /// <summary>
+        /// Reads data from the source into an array of bytes. The number of bytes
+        /// actually read is returned as an integer.The method blocks until at least
+        /// 1 byte of input is available, end of the stream has been detected
+        /// </summary>
+        /// <returns>the total number of bytes read into the buffer</returns>
         byte[] Read();
 
+        /// <summary>
+        /// Closes the source and releases any system resources associated.
+        /// </summary>
         void Close();
 
+        /// <summary>
+        /// Informs that the audio is finished. Forces any buffered output bytes to
+        /// be written out.
+        /// </summary>
         void Finish();
     }
 }

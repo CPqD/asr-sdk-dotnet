@@ -13,65 +13,53 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-
-using System;
-using System.Collections.Generic;
+ 
 using System.IO;
 
 namespace CPqDASR.Recognizer
 {
     public class FileAudioSource : IAudioSource
     {
-        private Queue<byte[]> Buffer { get; set; }
+        private BufferAudioSource bufferAudioSource;
 
         internal FileAudioSource()
         {
-            Buffer = new Queue<byte[]>();
+            bufferAudioSource = new BufferAudioSource();
         }
 
         public FileAudioSource(string Path)
             : this()
         {
-            byte[] fileByte = File.ReadAllBytes(Path);
-
-            int incomingOffset = 0;
-
-            while (incomingOffset < fileByte.Length)
+            try
             {
-                byte[] chunck = new byte[4096];
-
-                int length = Math.Min(chunck.Length, fileByte.Length - incomingOffset);
-
-                System.Buffer.BlockCopy(fileByte, incomingOffset, chunck, 0, length);
-
-                incomingOffset += length;
-
-                // Transmit outbound buffer
-                Buffer.Enqueue(chunck);
+                byte[] fileByte = File.ReadAllBytes(Path);
+                bufferAudioSource.Write(fileByte);
+            }
+            finally
+            {
+                bufferAudioSource.Finish();
             }
         }
 
-        public FileAudioSource(byte[] Buffer)
+        public FileAudioSource(byte[] buffer)
             : this()
         {
-            this.Buffer.Enqueue(Buffer);
+            bufferAudioSource.Write(buffer);
         }
 
         public byte[] Read()
         {
-            if (Buffer.Count > 0)
-                return Buffer.Dequeue();
-            return new byte[0];
+            return bufferAudioSource.Read();
         }
 
         public void Close()
         {
-            Buffer = null;
+            bufferAudioSource.Close();
         }
 
         public void Finish()
         {
-            Close();
+            bufferAudioSource.Finish();
         }
     }
 }
