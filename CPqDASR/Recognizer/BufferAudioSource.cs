@@ -13,8 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-
-using CPqDASR.Recognizer;
+ 
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -29,7 +28,10 @@ namespace CPqDASR.Recognizer
         private Queue<byte[]> buffer;
 
         private bool finished;
+
         private object locker = new object();
+
+        private const int MAX_CHUNCK_LENGTH = 3200;
 
         public BufferAudioSource()
         {
@@ -45,6 +47,7 @@ namespace CPqDASR.Recognizer
         {
             if (!finished && bytes != null)
             {
+
                 int incomingOffset = 0;
 
                 while (incomingOffset < bytes.Length)
@@ -53,8 +56,9 @@ namespace CPqDASR.Recognizer
                     {
                         try
                         {
-                            byte[] chunck = new byte[4096];
-                            int length = Math.Min(chunck.Length, bytes.Length - incomingOffset);
+                            int length = Math.Min(MAX_CHUNCK_LENGTH, bytes.Length - incomingOffset);
+
+                            byte[] chunck = new byte[length];
 
                             Buffer.BlockCopy(bytes, incomingOffset, chunck, 0, length);
                             incomingOffset += length;

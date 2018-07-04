@@ -96,11 +96,11 @@ namespace CPqDASRUnitTest.Recognizer
 
             while (incomingOffset < fileByte.Length)
             {
-                byte[] chunck = new byte[4096];
+                int length = Math.Min(3200, fileByte.Length - incomingOffset);
 
-                int length = Math.Min(chunck.Length, fileByte.Length - incomingOffset);
+                byte[] chunck = new byte[length];
 
-                System.Buffer.BlockCopy(fileByte, incomingOffset, chunck, 0, length);
+                Buffer.BlockCopy(fileByte, incomingOffset, chunck, 0, length);
 
                 incomingOffset += length;
 
