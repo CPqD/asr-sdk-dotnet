@@ -73,7 +73,7 @@ namespace CPqDASR.Recognizer
                     }
                 }
                 return true;
-            }
+            }   
             else
             {
                 return false;

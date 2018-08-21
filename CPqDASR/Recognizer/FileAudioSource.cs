@@ -13,8 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
- 
+
+using System;
 using System.IO;
+using System.Linq;
 
 namespace CPqDASR.Recognizer
 {
@@ -27,13 +29,29 @@ namespace CPqDASR.Recognizer
             bufferAudioSource = new BufferAudioSource();
         }
 
-        public FileAudioSource(string Path)
+        public FileAudioSource(string path)
             : this()
         {
             try
             {
-                byte[] fileByte = File.ReadAllBytes(Path);
-                bufferAudioSource.Write(fileByte);
+                byte[] fileByte = File.ReadAllBytes(path);
+
+                if (Path.GetExtension(path).ToLower().Equals(".wav"))
+                {
+                    byte[] headerMask = fileByte.Skip(16).Take(4).ToArray();
+
+                    int headerSizeCode = BitConverter.ToInt32(headerMask, 0);
+
+                    int headerSize = headerSizeCode + 28;
+
+                    byte[] bufferHeaderless = fileByte.Skip(headerSize).ToArray();
+
+                    bufferAudioSource.Write(bufferHeaderless);
+                }
+                else
+                {
+                    bufferAudioSource.Write(fileByte);
+                }
             }
             finally
             {
