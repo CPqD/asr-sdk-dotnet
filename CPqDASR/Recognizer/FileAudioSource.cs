@@ -17,6 +17,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using CPqDWebSocketStandard;
 
 namespace CPqDASR.Recognizer
 {
@@ -24,34 +25,29 @@ namespace CPqDASR.Recognizer
     {
         private BufferAudioSource bufferAudioSource;
 
+        private string contentType;
+
         internal FileAudioSource()
         {
             bufferAudioSource = new BufferAudioSource();
         }
 
-        public FileAudioSource(string path)
+        public FileAudioSource(string path, string contentType)
             : this()
         {
             try
             {
                 byte[] fileByte = File.ReadAllBytes(path);
-
-                if (Path.GetExtension(path).ToLower().Equals(".wav"))
+                
+                if (contentType.IsNullOrEmpty() ||
+                    !(contentType.Equals(AudioType.RAW) || contentType.Equals(AudioType.DETECT)))
                 {
-                    byte[] headerMask = fileByte.Skip(16).Take(4).ToArray();
-
-                    int headerSizeCode = BitConverter.ToInt32(headerMask, 0);
-
-                    int headerSize = headerSizeCode + 28;
-
-                    byte[] bufferHeaderless = fileByte.Skip(headerSize).ToArray();
-
-                    bufferAudioSource.Write(bufferHeaderless);
+                    throw new ArgumentException();
                 }
-                else
-                {
-                    bufferAudioSource.Write(fileByte);
-                }
+
+                this.contentType = contentType;
+                
+                bufferAudioSource.Write(fileByte, contentType);
             }
             finally
             {
@@ -59,10 +55,12 @@ namespace CPqDASR.Recognizer
             }
         }
 
-        public FileAudioSource(byte[] buffer)
+        public FileAudioSource(byte[] buffer, string contentType)
             : this()
         {
-            bufferAudioSource.Write(buffer);
+            this.contentType = contentType;
+            
+            bufferAudioSource.Write(buffer, contentType);
         }
 
         public byte[] Read()
@@ -78,6 +76,11 @@ namespace CPqDASR.Recognizer
         public void Finish()
         {
             bufferAudioSource.Finish();
+        }
+
+        public string getContentType()
+        {
+            return contentType;
         }
     }
 }

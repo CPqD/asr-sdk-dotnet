@@ -39,5 +39,8 @@ namespace CPqDASR.Recognizer
         /// be written out.
         /// </summary>
         void Finish();
+
+
+        string getContentType();
     }
 }

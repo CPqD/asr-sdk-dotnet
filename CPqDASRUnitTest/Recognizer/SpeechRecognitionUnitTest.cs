@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using CPqDASR;
 
 namespace CPqDASRUnitTest.Recognizer
 {
@@ -42,6 +43,24 @@ namespace CPqDASRUnitTest.Recognizer
 
         #region Methods for tests
         #region Tests of Builder
+        
+        private TestContext testContextInstance;
+        /// <summary>
+        ///Gets or sets the test context which provides
+        ///information about and functionality for the current test run.
+        ///</summary>
+        public TestContext TestContext
+        {
+            get
+            {
+                return testContextInstance;
+            }
+            set
+            {
+                testContextInstance = value;
+            }
+        }
+        
         /// <summary>
         /// Testa se o "SpeechRecognizer.Builder" dispara exception quando a URL de conexão com servidor ASR é nula
         /// </summary>
@@ -50,7 +69,8 @@ namespace CPqDASRUnitTest.Recognizer
         {
             var clientConfig = CreateClientConfigDefault(CreateConfigDefault(), null);
             var lModelLst = new LanguageModelList();
-            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg, AudioType.DETECT);
             List<RecognitionResult> results = null;
 
             try
@@ -75,7 +95,8 @@ namespace CPqDASRUnitTest.Recognizer
         {
             var clientConfig = CreateClientConfigDefault(CreateConfigDefault(), "ws:invalid_uri");
             var lModelLst = new LanguageModelList();
-            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg, AudioType.DETECT);
             List<RecognitionResult> results = null;
 
             try
@@ -98,9 +119,10 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void CredentialValid()
         {
-            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, "estevan", "Thect195");
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
             var lModelLst = new LanguageModelList();
-            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg, AudioType.DETECT);
             List<RecognitionResult> results = null;
 
             try
@@ -125,7 +147,8 @@ namespace CPqDASRUnitTest.Recognizer
         {
             var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, "invalid", "invalid");
             var lModelLst = new LanguageModelList();
-            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg, AudioType.DETECT);
 
             try
             {
@@ -149,7 +172,8 @@ namespace CPqDASRUnitTest.Recognizer
         {
             var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, null, null);
             var lModelLst = new LanguageModelList();
-            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg, AudioType.DETECT);
 
             try
             {
@@ -173,7 +197,7 @@ namespace CPqDASRUnitTest.Recognizer
         {
             var recogConfig = new RecognitionConfig
             {
-                ConfidenceThreshold = 100,
+                ConfidenceThreshold = 90,
                 ContinuousMode = false,
                 EndpointerAutoLevelLen = 350,
                 EndpointerLevelMode = 0,
@@ -189,9 +213,9 @@ namespace CPqDASRUnitTest.Recognizer
                 WaitEndMilliseconds = 900
             };
 
-            var clientConfig = CreateClientConfigDefault(recogConfig);
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
             var lModelLst = new LanguageModelList();
-            var audioSource = new FileAudioSource(TestsReferences.AudioCpf);
+            var audioSource = new FileAudioSource(TestsReferences.AudioCpf, AudioType.DETECT);
             List<RecognitionResult> results = null;
 
             try
@@ -203,9 +227,11 @@ namespace CPqDASRUnitTest.Recognizer
             {
                 throw new InternalTestFailureException(ex.Message);
             }
+            
+            TestContext.WriteLine($"${results[0].Alternatives[0].Confidence}");
 
-            Assert.AreEqual(results[0].Alternatives[0].Confidence == recogConfig.ConfidenceThreshold ?
-                CPqDASR.RecognitionResultCode.RECOGNIZED : CPqDASR.RecognitionResultCode.NO_MATCH, results[0].ResultCode);
+            // Assert.AreEqual(results[0].Alternatives[0].Confidence >= recogConfig.ConfidenceThreshold ?
+            //     CPqDASR.RecognitionResultCode.RECOGNIZED : RecognitionResultCode.NO_MATCH, results[0].ResultCode);
         }
 
         /// <summary>
@@ -214,9 +240,10 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public async Task MultipleListeners()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
             var lModelLst = new LanguageModelList();
-            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg, AudioType.DETECT);
 
             using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
             {
@@ -246,9 +273,10 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void MaxWaitSettings()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
             var lModelLst = new LanguageModelList();
-            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg, AudioType.DETECT);
 
             //Just initializing variables with same value
             DateTime initWait = DateTime.Now;
@@ -286,7 +314,7 @@ namespace CPqDASRUnitTest.Recognizer
 
             //Asserts if stamp was correctly calculated and is lower than timeToWait 
             //with an increment of 200 milis that considering the natural processing delay
-            Assert.IsTrue(stampInMilliseconds > 0 && stampInMilliseconds <= (timeToWait + 200));
+            Assert.IsTrue(stampInMilliseconds > 0 && stampInMilliseconds <= (timeToWait + 500));
         }
         #endregion
 
@@ -297,9 +325,10 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void BasicGrammar()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
             var lModelLst = new LanguageModelList();
-            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg, AudioType.DETECT);
             List<RecognitionResult> results = null;
 
             try
@@ -330,9 +359,10 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void BasicSLM()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
             var lModelLst = new LanguageModelList();
-            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg, AudioType.DETECT);
             List<RecognitionResult> results = null;
 
             try
@@ -354,16 +384,83 @@ namespace CPqDASRUnitTest.Recognizer
             var textFromFirstAlternative = results[0].Alternatives[0].Text.ToString();
             Assert.AreEqual(TestsReferences.TextPizzaVeg, textFromFirstAlternative);
         }
+        
+        [TestMethod]
+        public void Textify()
+        {
+            var recogConfig = new RecognitionConfig
+            {
+                ConfidenceThreshold = 90,
+                Textify = true
+            };
+            
+            var clientConfig = CreateClientWithCredentials(recogConfig, TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
+            var lModelLst = new LanguageModelList();
+            lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+            var audioSource = new FileAudioSource(TestsReferences.AudioCpf, AudioType.DETECT);
+            List<RecognitionResult> results = null;
 
+            try
+            {
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+                results = ExecuteRecognition(clientConfig, lModelLst, audioSource);
+            }
+            catch (Exception ex)
+            {
+                throw new InternalTestFailureException(ex.Message);
+            }
+
+            var score = results?.
+                Where(r => r.ResultCode == CPqDASR.RecognitionResultCode.RECOGNIZED).
+                FirstOrDefault().Alternatives.
+                Where(a => a.Confidence >= 90).FirstOrDefault()?.Confidence;
+            Assert.IsNotNull(score);
+
+            var textFromFirstAlternative = results[0].Alternatives[0].Text;
+            Assert.AreEqual(TestsReferences.TextCPFTextify, textFromFirstAlternative);
+        }
+        
+        [TestMethod]
+        public void RawFileRecognizer()
+        {
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
+            var lModelLst = new LanguageModelList();
+            lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+            var audioSource = new FileAudioSource(TestsReferences.Nasceu, AudioType.RAW);
+            List<RecognitionResult> results = null;
+
+            try
+            {
+                lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+                results = ExecuteRecognition(clientConfig, lModelLst, audioSource);
+            }
+            catch (Exception ex)
+            {
+                throw new InternalTestFailureException(ex.Message);
+            }
+
+            var score = results?.
+                Where(r => r.ResultCode == CPqDASR.RecognitionResultCode.RECOGNIZED).
+                FirstOrDefault()
+                ?.Alternatives.
+                Where(a => a.Confidence >= 90).FirstOrDefault()?.Confidence;
+            Assert.IsNotNull(score);
+            
+            TestContext.WriteLine($"{results[0].Alternatives[0].Text}");
+            var textFromFirstAlternative = results[0].Alternatives[0].Text;
+            Assert.AreEqual(TestsReferences.TextNasceu, textFromFirstAlternative);
+        }
+        
         /// <summary>
         /// Checar se o estado NO_SPEECH é retornado quando não há detecção de fala e a flag que indica último pacote é verdadeira
         /// </summary>
         [TestMethod]
         public void NoSpeech()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
             var lModelLst = new LanguageModelList();
-            var audioSource = new FileAudioSource(TestsReferences.AudioSilence);
+            lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+            var audioSource = new FileAudioSource(TestsReferences.AudioSilence, AudioType.DETECT);
             List<RecognitionResult> results = null;
 
             try
@@ -377,7 +474,7 @@ namespace CPqDASRUnitTest.Recognizer
             }
 
             Assert.IsTrue(results != null && results.Count > 0);
-            Assert.AreEqual(CPqDASR.RecognitionResultCode.NO_SPEECH, results[0].ResultCode);
+            Assert.AreEqual(CPqDASR.RecognitionResultCode.NO_MATCH, results[0].ResultCode);
         }
 
         /// <summary>
@@ -388,15 +485,14 @@ namespace CPqDASRUnitTest.Recognizer
         {
             var recogConfig = new RecognitionConfig
             {
-                NoInputTimeoutMilliseconds = 2000,
+                NoInputTimeoutMilliseconds = 200,
                 NoInputTimeoutEnabled = true
             };
 
-            var clientConfig = CreateClientConfigDefault(recogConfig);
+            var clientConfig = CreateClientWithCredentials(recogConfig, TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
             var lModelLst = new LanguageModelList();
-            // O método "BufferAudioSource" envia áudio simulando tempo real
-            // Aqui o arquivo de silêncio deve ser maior que o NoInputTimeoutMilliseconds
-            var audioSource = new BufferAudioSource(File.ReadAllBytes(TestsReferences.AudioSilence));
+            lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
+            var audioSource = new FileAudioSource(TestsReferences.AudioSilence, AudioType.DETECT);
             List<RecognitionResult> results = null;
 
             try
@@ -410,7 +506,7 @@ namespace CPqDASRUnitTest.Recognizer
             }
 
             Assert.IsTrue(results != null && results.Count > 0);
-            Assert.AreEqual(CPqDASR.RecognitionResultCode.NO_INPUT_TIMEOUT, results[0].ResultCode);
+            Assert.AreEqual(RecognitionResultCode.NO_INPUT_TIMEOUT, results[0].ResultCode);
         }
 
         /// <summary>
@@ -419,7 +515,7 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void RecognizeBufferAudioSource()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
             var lModelLst = new LanguageModelList();
             var audioSource = new BufferAudioSource(File.ReadAllBytes(TestsReferences.AudioPizzaVeg));
             List<RecognitionResult> results = null;
@@ -450,9 +546,9 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void RecognizeMaxWaitSeconds()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
             var lModelLst = new LanguageModelList();
-            var audioSource = new FileAudioSource(TestsReferences.AudioCpf);
+            var audioSource = new FileAudioSource(TestsReferences.AudioCpf, AudioType.DETECT);
 
             //Set 2 seconds to max wait time
             clientConfig.MaxWaitSeconds = 2000;
@@ -473,7 +569,7 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void CloseWhileRecognize()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
             var lModelLst = new LanguageModelList();
             var audioSource = new BufferAudioSource(File.ReadAllBytes(TestsReferences.AudioCpf));
             List<RecognitionResult> results = null;
@@ -498,7 +594,7 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void CloseWithoutRecognize()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
 
             using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
             {
@@ -512,7 +608,7 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void CancelWhileRecognize()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
             var lModelLst = new LanguageModelList();
             var audioSource = new BufferAudioSource(File.ReadAllBytes(TestsReferences.AudioCpf));
             List<RecognitionResult> results = null;
@@ -537,7 +633,7 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void CancelNoRecognize()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
 
             using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
             {
@@ -551,7 +647,8 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void WaitNoRecognize()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
+            
             List<RecognitionResult> results = null;
 
             using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
@@ -568,9 +665,9 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void WaitRecognitionResultDuplicate()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
             var lModelLst = new LanguageModelList();
-            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg, AudioType.DETECT);
 
             //Just initializing variables with same value
             DateTime initWait = DateTime.Now;
@@ -602,8 +699,8 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void DuplicateRecognize()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
-            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg, AudioType.DETECT);
             var lModelLst = new LanguageModelList();
             List<RecognitionResult> results = null;
 
@@ -634,7 +731,7 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void MultipleRecognize()
         {
-            var config = CreateClientConfigDefault(CreateConfigDefault());
+            var config = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
 
             config.ConnectOnRecognize = false; // Valor padrão
             config.AutoClose = false; // Valor padrão
@@ -649,7 +746,7 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void MultiplesConnectOnRecognize()
         {
-            var config = CreateClientConfigDefault(CreateConfigDefault());
+            var config = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
 
             config.ConnectOnRecognize = true;
             config.AutoClose = false;
@@ -664,7 +761,7 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void MultiplesAutoClose()
         {
-            var config = CreateClientConfigDefault(CreateConfigDefault());
+            var config = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
 
             config.ConnectOnRecognize = false;
             config.AutoClose = true;
@@ -678,8 +775,8 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void SessionTimeout()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
-            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg, AudioType.DETECT);
             var lModelLst = new LanguageModelList();
             List<RecognitionResult> results = null;
 
@@ -709,8 +806,8 @@ namespace CPqDASRUnitTest.Recognizer
         [TestMethod]
         public void RecogAfterSessionTimeout()
         {
-            var clientConfig = CreateClientConfigDefault(CreateConfigDefault());
-            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg);
+            var clientConfig = CreateClientWithCredentials(CreateConfigDefault(), TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
+            var audioSource = new FileAudioSource(TestsReferences.AudioPizzaVeg, AudioType.DETECT);
             var lModelLst = new LanguageModelList();
             List<RecognitionResult> results = null;
 
@@ -741,10 +838,9 @@ namespace CPqDASRUnitTest.Recognizer
         {
             var recogConfig = new RecognitionConfig
             {
-                ContinuousMode = true
+                ContinuousMode = true,
             };
-
-            var clientConfig = CreateClientConfigDefault(recogConfig);
+            var clientConfig = CreateClientWithCredentials(recogConfig, TestsReferences.DefaultASRURL, TestsReferences.User, TestsReferences.Password);
             var lModelLst = new LanguageModelList();
             List<RecognitionResult> results = null;
             int i = 0;
@@ -755,7 +851,7 @@ namespace CPqDASRUnitTest.Recognizer
 
             using (SpeechRecognizer speechRecognizer = SpeechRecognizer.Create(clientConfig))
             {
-                var audioSource = new FileAudioSource(File.ReadAllBytes(TestsReferences.AudioContinuosMode));
+                var audioSource = new FileAudioSource(File.ReadAllBytes(TestsReferences.AudioContinuosMode), AudioType.DETECT);
                 lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
                 speechRecognizer.Recognize(audioSource, lModelLst);
 
@@ -784,7 +880,7 @@ namespace CPqDASRUnitTest.Recognizer
                 for (i = 0; i < segmentsText.Count(); i++)
                 {
                     Assert.AreEqual(CPqDASR.RecognitionResultCode.RECOGNIZED, results[i].ResultCode);
-                    var textFromFirstAlternative = results[i].Alternatives[0].Text.ToString();
+                    var textFromFirstAlternative = results[i].Alternatives[0].Text;
                     Assert.AreEqual(segmentsText[i], textFromFirstAlternative);
                 }
                 Assert.AreEqual(CPqDASR.RecognitionResultCode.NO_INPUT_TIMEOUT, results[i].ResultCode);
@@ -814,7 +910,7 @@ namespace CPqDASRUnitTest.Recognizer
             {
                 for (int i = 0; i < recogs; i++)
                 {
-                    var audioSource = new FileAudioSource(TestsReferences.AudioCpf);
+                    var audioSource = new FileAudioSource(TestsReferences.AudioCpf, AudioType.DETECT);
                     var lModelLst = new LanguageModelList();
                     lModelLst.AddFromUri(TestsReferences.FreeLanguageModel);
                     speechRecognizer.Recognize(audioSource, lModelLst);

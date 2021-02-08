@@ -136,7 +136,7 @@ namespace CPqDASR.Protocol
         private SAMPLE_RATE enuSampleRate = SAMPLE_RATE.SAMPLE_RATE_16;
 
         private int shoMaxSentence = 5;
-
+        
         /// <summary>
         /// Armazena a sessão de referencia no ASR
         /// </summary>
@@ -341,7 +341,7 @@ namespace CPqDASR.Protocol
         /// </summary>
         /// <param name="audio">Conteudo do audio</param>
         /// <param name="lastPackage">Indica se está sendo enviado o último pacote para o servidor</param>
-        internal void SendAudio(byte[] audio, bool bolLastPacket)
+        internal void SendAudio(byte[] audio, bool bolLastPacket,string contentType)
         {
             try
             {
@@ -349,7 +349,7 @@ namespace CPqDASR.Protocol
                 strCommand.AppendLine(string.Format("{0} {1} {2}", PRODUCT, VERSION, ASR_Command.SEND_AUDIO));
                 strCommand.AppendLine(string.Concat("LastPacket: ", bolLastPacket));
                 strCommand.AppendLine(string.Concat("Content-Length: ", audio.Length));
-                strCommand.AppendLine(string.Concat("Content-Type: application/octet-stream"));
+                strCommand.AppendLine(string.Concat("Content-Type: ", contentType));
                 strCommand.AppendLine();
 
                 WriteLog(strCommand.ToString().Trim().Replace("\r\n", ", "));
@@ -370,7 +370,7 @@ namespace CPqDASR.Protocol
                         WriteLog("Dados enviados ao WebSocket");
 
 #if (DEBUG)
-                        Console.WriteLine(strCommand.ToString());
+                        Debug.WriteLine(strCommand.ToString());
 #endif
                     }
                 }
@@ -530,17 +530,20 @@ namespace CPqDASR.Protocol
         /// <param name="strValue"></param>
         private void IdentifyResponse(string strValue)
         {
-            Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-            Console.WriteLine(strValue);
-            Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+#if (DEBUG)
+            Debug.WriteLine("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+            Debug.WriteLine(strValue);
+            Debug.WriteLine("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+#endif
             try
             {
                 strValue = strValue.Replace("\r\n", "\r");
                 var arrValues = strValue.Split('\r');
                 var strResponse = GetResponse(arrValues);
                 IsListening = arrValues.First(p => p.IndexOf("Session-Status: ") != -1).Replace("Session-Status: ", "") == "LISTENING";
-
-                Console.WriteLine("IsListening: " + IsListening);
+#if (DEBUG)
+                Debug.WriteLine("IsListening: " + IsListening);
+#endif
                 switch (strResponse.ToEnum<WS_RESPONSES>())
                 {
                     case WS_RESPONSES.RESPONSE: //respostas gerais do servidor
@@ -590,7 +593,6 @@ namespace CPqDASR.Protocol
                         SendOnCreatedSession(objResponse);
                         break;
                     case WS_COMMANDS.START_RECOGNITION:
-                        Debug.WriteLine("Recebeu mensagem de inicio de recebimento de audio");
                         SendOnListening();
                         break;
                     case WS_COMMANDS.STOP_RECOGNITION:
@@ -670,7 +672,7 @@ namespace CPqDASR.Protocol
             string str = String.Concat(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.ffff"), " Handle: ", strHandle, " ", strValue);
             Trace.WriteLine(str);
 #if (DEBUG)
-            Console.WriteLine(str);
+            Debug.WriteLine(str);
 #endif
         }
 
@@ -892,6 +894,52 @@ namespace CPqDASR.Protocol
             {
                 objRecognitionConfig.ContinuousMode = bool.Parse(value);
             }
+            else if (key?.Equals(RecognitionConfig.HeaderTextify) ?? false)
+            {
+                objRecognitionConfig.Textify = bool.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderEndpointerUseToneDetectors) ?? false)
+            {
+                objRecognitionConfig.EndpointerUseToneDetectors = bool.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderWordDetails) ?? false)
+            {
+                objRecognitionConfig.WordDetails = int.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderMaxSegmentDuration) ?? false)
+            {
+                objRecognitionConfig.MaxSegmentDuration = int.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderSegmentOverlapTime) ?? false)
+            {
+                objRecognitionConfig.SegmentOverlapTime = int.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderHintsWords) ?? false)
+            {
+                objRecognitionConfig.HintsWords = value;
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderFormattingEnabled) ?? false)
+            {
+                objRecognitionConfig.FormattingEnabled = bool.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderTextifyFormattingRules) ?? false)
+            {
+                objRecognitionConfig.TextifyFormattingRules = value;
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderLoggingTag) ?? false)
+            {
+                objRecognitionConfig.LoggingTag = value;
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderPartialResultEnabled) ?? false)
+            {
+                objRecognitionConfig.PartialResultEnabled = bool.Parse(value);
+            }
+            else if (key?.Equals(RecognitionConfig.HeaderPartialResultInterval) ?? false)
+            {
+                objRecognitionConfig.PartialResultInterval = int.Parse(value);
+            }
+
+
         }
 
         /// <summary>
@@ -964,7 +1012,40 @@ namespace CPqDASR.Protocol
 
             if (objRecognitionConfig.ConfidenceThreshold != null)
                 str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderConfidenceThreshold, objRecognitionConfig.ConfidenceThreshold));
+            
+            if (objRecognitionConfig.EndpointerUseToneDetectors != null)
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderEndpointerUseToneDetectors, objRecognitionConfig.EndpointerUseToneDetectors));
+            
+            if (objRecognitionConfig.WordDetails != null)
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderWordDetails, objRecognitionConfig.WordDetails));
+            
+            if (objRecognitionConfig.MaxSegmentDuration != null)
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderMaxSegmentDuration, objRecognitionConfig.MaxSegmentDuration));
+            
+            if (objRecognitionConfig.SegmentOverlapTime != null)
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderSegmentOverlapTime, objRecognitionConfig.SegmentOverlapTime));
+            
+            if (objRecognitionConfig.HintsWords != null)
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderHintsWords, objRecognitionConfig.HintsWords));
+            
+            if(objRecognitionConfig.Textify != null)
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderTextify, objRecognitionConfig.Textify));
 
+            if(objRecognitionConfig.FormattingEnabled  != null)
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderFormattingEnabled, objRecognitionConfig.FormattingEnabled));
+            
+            if(objRecognitionConfig.TextifyFormattingRules  != null)
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderTextifyFormattingRules, objRecognitionConfig.TextifyFormattingRules));
+            
+            if(objRecognitionConfig.LoggingTag  != null)
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderLoggingTag, objRecognitionConfig.LoggingTag));
+            
+            if(objRecognitionConfig.PartialResultEnabled  != null)
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderPartialResultEnabled, objRecognitionConfig.PartialResultEnabled));
+            
+            if(objRecognitionConfig.PartialResultInterval  != null)
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderPartialResultInterval, objRecognitionConfig.PartialResultInterval));
+            
             return str.ToString();
         }
 
