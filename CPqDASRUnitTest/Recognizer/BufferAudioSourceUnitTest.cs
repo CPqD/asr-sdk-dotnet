@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using CPqDASR;
 
 namespace CPqDASRUnitTest.Recognizer
 {
@@ -26,7 +27,7 @@ namespace CPqDASRUnitTest.Recognizer
             {
                 while (originSource.Count > 0)
                 {
-                    bufferAudioSource.Write(originSource.Dequeue());
+                    bufferAudioSource.Write(originSource.Dequeue(), AudioType.DETECT);
                     Thread.Sleep(100);
                 }
 

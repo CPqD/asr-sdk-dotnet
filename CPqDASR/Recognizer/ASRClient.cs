@@ -25,6 +25,7 @@ using System.Diagnostics;
 using System.Threading;
 using CPqDAsr.Entities;
 using System.IO;
+using System.Net.Mime;
 
 namespace CPqDASR.Recognizer
 {
@@ -55,6 +56,11 @@ namespace CPqDASR.Recognizer
         /// </summary>
         private bool isOpening = false;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        private string contentType;
+        
         #endregion
 
         #region AutoResetEvent
@@ -156,7 +162,7 @@ namespace CPqDASR.Recognizer
         /// <param name="objResult"></param>
         internal override void SendOnFinalResult(RecognitionResult objResult)
         {
-
+            
             //When that is called at first time, the objResult is null and needed be initialized
             if (this.objResult == null)
             {
@@ -166,7 +172,7 @@ namespace CPqDASR.Recognizer
             this.objResult.Add(objResult);
 
             base.SendOnFinalResult(objResult);
-
+            
             if ((objResult?.LastSpeechSegment ?? false) && (objResult?.FinalResult ?? false))
             {
                 wtResult?.Set();
@@ -203,6 +209,8 @@ namespace CPqDASR.Recognizer
             AudioSource = objAudioSource;
             objResult = null;
             wtResult = new AutoResetEvent(false);
+            
+            contentType = objAudioSource.getContentType();
 
             if (!IsConnected)
             {
@@ -243,9 +251,12 @@ namespace CPqDASR.Recognizer
                 //Aguarda o termino do reconhecimento
                 wtResult.WaitOne();
                 tm.Close();
-
+                
                 if (objResult == null)
+                {
                     throw new RecognitionException(RecognitionErrorCode.FAILURE, "Response timeout");
+                }
+              
             }
 
             //Reset wtResult to future interations
@@ -311,9 +322,11 @@ namespace CPqDASR.Recognizer
                     buffer = AudioSource.Read();
                     if (IsListening)
                     {
-                        Console.WriteLine("\n\nENVIA AUDIO\n\n");
+#if(DEBUG)
+                        Debug.WriteLine("\n\nENVIA AUDIO\n\n");
+#endif
                         //Envia um array de bytes do tamanho que está no buffer
-                        SendAudio(buffer, buffer.Length == 0);
+                        SendAudio(buffer, buffer.Length == 0, contentType);
                     }
                 } while (IsListening && buffer.Length > 0);
 
@@ -340,7 +353,7 @@ namespace CPqDASR.Recognizer
         /// </summary>
         private void StopSendAudio()
         {
-            this.thrSendAudio.Abort();
+            //this.thrSendAudio.Abort();
         }
 
         private void ValidConnection()

@@ -125,6 +125,10 @@
     <value>8K\CPF\cpf_8k.wav</value>
     <comment>Áudio simples de CPF</comment>
   </data>
+  <data name="Nasceu" xml:space="preserve">
+    <value>8K\Nasceu\nasceu.pcm</value>
+    <comment>Áudio simples de CPF</comment>
+  </data>
   <data name="AudioPizzaVeg" xml:space="preserve">
     <value>8K\pizza\pizza_veg_audio_8k.wav</value>
     <comment>Áudio simples de pizza</comment>
@@ -134,7 +138,7 @@
     <comment>Áudio com silêncio absoluto</comment>
   </data>
   <data name="DefaultASRURL" xml:space="preserve">
-    <value>wss://speech.cpqd.com.br/asr/ws/estevan/recognize/8k</value>
+    <value>wss://speech.cpqd.com.br/asr/ws/v2/recognize/8k</value>
     <comment>URL Oficial de acesso ao ASR para Testes dos SDKs</comment>
   </data>
   <data name="FreeLanguageModel" xml:space="preserve">
@@ -146,7 +150,7 @@
     <comment>Gramática de Pizza via HTTP</comment>
   </data>
   <data name="InternalASRURL" xml:space="preserve">
-    <value>ws://vmh123.cpqd.com.br:8025/asr-server/asr</value>
+    <value>wss://speech.cpqd.com.br/asr/ws/v2/recognize/8k</value>
     <comment>URL interna de acesso ao ASR para testes</comment>
   </data>
   <data name="InterpPizzaVeg" xml:space="preserve">
@@ -168,5 +172,21 @@
   <data name="TextPizzaVeg" xml:space="preserve">
     <value>eu quero uma pizza vegetariana</value>
     <comment>Texto equivalente ao áudio "pizza veg"</comment>
+  </data>
+  <data name="TextCPFTextify" xml:space="preserve">
+    <value>728934251-11</value>
+    <comment>Texto equivalente ao áudio "CPF"</comment>
+  </data>
+  <data name="TextNasceu" xml:space="preserve">
+    <value>a minha filha nasceu hoje ela tem dez anos</value>
+    <comment>Texto equivalente ao áudio "nasceu"</comment>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>dummy</value>
+    <comment>Usuário para autenticação</comment>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>dummy</value>
+    <comment>Senha para autenticação</comment>
   </data>
 </root>

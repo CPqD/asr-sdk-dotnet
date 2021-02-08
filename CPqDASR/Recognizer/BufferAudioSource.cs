@@ -32,6 +32,8 @@ namespace CPqDASR.Recognizer
         private object locker = new object();
 
         private const int MAX_CHUNCK_LENGTH = 3200;
+        
+        private string contentType = AudioType.RAW;
 
         public BufferAudioSource()
         {
@@ -40,11 +42,13 @@ namespace CPqDASR.Recognizer
 
         public BufferAudioSource(byte[] bytes) : this()
         {
-            Write(bytes);
+            Write(bytes, contentType);
         }
 
-        public bool Write(byte[] bytes)
+        public bool Write(byte[] bytes, string contentType)
         {
+            this.contentType = contentType;
+            
             if (!finished && bytes != null)
             {
 
@@ -120,6 +124,11 @@ namespace CPqDASR.Recognizer
             {
                 Monitor.PulseAll(locker);
             }
+        }
+
+        public string getContentType()
+        {
+            return contentType;
         }
     }
 }

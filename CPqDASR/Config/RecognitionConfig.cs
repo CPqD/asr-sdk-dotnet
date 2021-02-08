@@ -49,7 +49,29 @@ namespace CPqDASR.Config
         internal const string HeaderContinuousMode = "decoder.continuousMode";
 
         internal const string HeaderConfidenceThreshold = "decoder.confidenceThreshold";
+        
+        internal const string HeaderEndpointerUseToneDetectors = "endpointer.useToneDetectors";
+        
+        internal const string HeaderWordDetails = "decoder.wordDetails";
 
+        internal const string HeaderMaxSegmentDuration = "endpointer.maxSegmentDuration";
+        
+        internal const string HeaderSegmentOverlapTime = "endpointer.segmentOverlapTime";
+        
+        internal const string HeaderHintsWords = "hints.words";
+        
+        internal const string HeaderTextify = "textify.enabled";
+
+        internal const string HeaderFormattingEnabled = "textify.formattingEnabled";
+
+        internal const string HeaderTextifyFormattingRules = "textify.formattingRules";
+        
+        internal const string HeaderLoggingTag = "logging.tag";
+
+        internal const string HeaderPartialResultEnabled = "decoder.partialResultEnabled";
+
+        internal const string HeaderPartialResultInterval = "decoder.partialResultInterval";
+        
         #endregion
 
         #region content
@@ -124,6 +146,61 @@ namespace CPqDASR.Config
         /// </summary>
         public bool? ContinuousMode { get; set; } = false;
 
+        /// <summary>
+        /// Habilita a supressão de tons de telefonia no reconhecimento.
+        /// </summary>
+        public bool? EndpointerUseToneDetectors { get; set; } = false;
+
+        /// <summary>
+        /// Controla a exibição dos detalhes por palavra.
+        /// </summary>
+        public int? WordDetails { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? MaxSegmentDuration { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? SegmentOverlapTime { get; set; }
+        
+        /// <summary>
+        /// Adiciona novas palavras ao Modelo de Língua ou aumenta a probabilidade de aparecimento de palavras já existentes.
+        /// </summary>
+        public string HintsWords { get; set; }
+        
+        /// <summary>
+        /// Habilita a formatação automática de números, datas, horários, etc.
+        /// </summary>
+        public bool? Textify { get; set; } = false;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool? FormattingEnabled { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public string TextifyFormattingRules { get; set; }
+        
+        /// <summary>
+        /// Identificação fornecida pela aplicação cliente que é registrada nos logs do CPQD ASR com o objetivo de rastrear determinada interação com o usuário. Logging-Tag é definida pela aplicação cliente e enviada ao CPQD ASR pelas APIs MRCP, REST e WS.
+        /// </summary>
+        public string LoggingTag { get; set; }
+        
+        /// <summary>
+        /// Indica se resultados parciais estão habilitados. Um resultado parcial é o texto reconhecido quando o áudio ainda não foi recebido completamente.
+        /// </summary>
+        public bool? PartialResultEnabled { get; set; }
+        
+        /// <summary>
+        /// Indica o intervalo de tempo para gerar um resultado parcial.
+        /// </summary>
+        public int? PartialResultInterval { get; set; }
+        
         #endregion
 
         #endregion

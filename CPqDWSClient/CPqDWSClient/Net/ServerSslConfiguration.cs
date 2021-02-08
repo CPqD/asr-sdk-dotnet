@@ -63,7 +63,7 @@ namespace  CPqDWebSocketStandard.Net
     /// the server.
     /// </param>
     public ServerSslConfiguration (X509Certificate2 serverCertificate)
-      : this (serverCertificate, false, SslProtocols.Default, false)
+      : this (serverCertificate, false, SslProtocols.None, false)
     {
     }
 

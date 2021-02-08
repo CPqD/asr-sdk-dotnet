@@ -119,7 +119,7 @@ namespace CPqDASR
         SAMPLE_RATE_8 = 8000,
         SAMPLE_RATE_16 = 16000,
     };
-
+    
     /// <summary>
     /// Enumerador para o Level Mode
     /// </summary>
@@ -205,6 +205,7 @@ namespace CPqDASR
         FAILURE,
     }
 
+
     /// <summary>
     /// Indicates the result of the speech recognition process.
     /// </summary>
@@ -218,5 +219,14 @@ namespace CPqDASR
         EARLY_SPEECH,
         RECOGNITION_TIMEOUT,
         FAILURE,
+    }
+
+    /// <summary>
+    /// Indicates the type of audio source.
+    /// </summary>
+    public static class AudioType
+    {
+        public const string RAW = "audio/raw";
+        public const string DETECT = "application/octet-stream";
     }
 }

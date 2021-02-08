@@ -191,10 +191,8 @@ namespace CPqDASR.Recognizer
             {
                 return Client.WaitRecognitionResult();
             }
-            else
-            {
-                throw new ObjectDisposedException(this.GetType().Name);
-            }
+
+            throw new ObjectDisposedException(GetType().Name);
 
         }
 
