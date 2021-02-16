@@ -1014,7 +1014,7 @@ namespace CPqDASR.Protocol
                 str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderConfidenceThreshold, objRecognitionConfig.ConfidenceThreshold));
             
             if (objRecognitionConfig.EndpointerUseToneDetectors != null)
-                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderEndpointerUseToneDetectors, objRecognitionConfig.EndpointerUseToneDetectors));
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderEndpointerUseToneDetectors, objRecognitionConfig.EndpointerUseToneDetectors.ToString().ToLower()));
             
             if (objRecognitionConfig.WordDetails != null)
                 str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderWordDetails, objRecognitionConfig.WordDetails));
@@ -1029,10 +1029,10 @@ namespace CPqDASR.Protocol
                 str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderHintsWords, objRecognitionConfig.HintsWords));
             
             if(objRecognitionConfig.Textify != null)
-                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderTextify, objRecognitionConfig.Textify));
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderTextify, objRecognitionConfig.Textify.ToString().ToLower()));
 
             if(objRecognitionConfig.FormattingEnabled  != null)
-                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderFormattingEnabled, objRecognitionConfig.FormattingEnabled));
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderFormattingEnabled, objRecognitionConfig.FormattingEnabled.ToString().ToLower()));
             
             if(objRecognitionConfig.TextifyFormattingRules  != null)
                 str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderTextifyFormattingRules, objRecognitionConfig.TextifyFormattingRules));
@@ -1041,7 +1041,7 @@ namespace CPqDASR.Protocol
                 str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderLoggingTag, objRecognitionConfig.LoggingTag));
             
             if(objRecognitionConfig.PartialResultEnabled  != null)
-                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderPartialResultEnabled, objRecognitionConfig.PartialResultEnabled));
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderPartialResultEnabled, objRecognitionConfig.PartialResultEnabled.ToString().ToLower()));
             
             if(objRecognitionConfig.PartialResultInterval  != null)
                 str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderPartialResultInterval, objRecognitionConfig.PartialResultInterval));
