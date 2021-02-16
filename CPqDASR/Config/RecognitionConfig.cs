@@ -149,7 +149,7 @@ namespace CPqDASR.Config
         /// <summary>
         /// Habilita a supressão de tons de telefonia no reconhecimento.
         /// </summary>
-        public bool? EndpointerUseToneDetectors { get; set; } = false;
+        public bool? EndpointerUseToneDetectors { get; set; }
 
         /// <summary>
         /// Controla a exibição dos detalhes por palavra.
@@ -174,7 +174,7 @@ namespace CPqDASR.Config
         /// <summary>
         /// Habilita a formatação automática de números, datas, horários, etc.
         /// </summary>
-        public bool? Textify { get; set; } = false;
+        public bool? Textify { get; set; }
 
         /// <summary>
         /// 

@@ -1014,7 +1014,7 @@ namespace CPqDASR.Protocol
                 str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderConfidenceThreshold, objRecognitionConfig.ConfidenceThreshold));
             
             if (objRecognitionConfig.EndpointerUseToneDetectors != null)
-                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderEndpointerUseToneDetectors, objRecognitionConfig.EndpointerUseToneDetectors));
+                str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderEndpointerUseToneDetectors, objRecognitionConfig.EndpointerUseToneDetectors.ToString().ToLower()));
             
             if (objRecognitionConfig.WordDetails != null)
                 str.AppendLine(string.Format("{0}:{1}", RecognitionConfig.HeaderWordDetails, objRecognitionConfig.WordDetails));
